@@ -1,0 +1,18 @@
+-Make the game
+
+
+
+----------------------- ENTREGA ------------------------
+
+PART COMUNA (7 punts):
+	- Tres obstacles amb els que el jugador pugui xocar
+	- Dos enemics que puguin interferir amb el jugador
+	- Dos o tres nivells amb estètica diferent
+	- Dos objectes de puntuació diferent
+
+FUNCIONALITATS (2 punts extra):
+	- Qualsevol cosa extra
+	- Shading
+	- Explosions amb sistemes de partícules
+	
+MEMÒRIA (3 punts):
