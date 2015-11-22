@@ -64,5 +64,5 @@ void cGame::initOpenGL() {
 	glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
 
 	// Create and compile our GLSL program from the shaders
-	programID = LoadShaders( "shaders/simple.vert", "shaders/simple.frag" );
+	programID = LoadShaders( "src/shaders/simple.vert", "src/shaders/simple.frag" );
 }
