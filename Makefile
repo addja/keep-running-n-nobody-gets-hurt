@@ -22,7 +22,7 @@ cGraphics.o: src/cGraphics.cpp
 
 .PHONY: clean
 
-run: all
+run: clean all
 	./$(BIN)
 
 clean:
