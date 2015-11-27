@@ -205,9 +205,13 @@ void cGame::initOpenGL() {
 	// Accept fragment if it closer to the camera than the former one
 	glDepthFunc(GL_LESS);	
 
+	// Cull triangles which normal is not towards the camera
+	glEnable(GL_CULL_FACE);
 }
 
 void cGame::initGame() {
 	data = cData();
 	data.loadTexture(TEX_CUBE,TEX_CUBE_PATH);
+	//data.loadTexture(TEX_CHAR,TEX_CHAR_PATH);
+	data.loadModel(MODEL_CHAR,MODEL_CHAR_PATH);
 }

@@ -21,6 +21,12 @@
 
 #define GAME_TITLE		"game"
 
-#define N_TEXTURES		1
+#define N_TEXTURES		2
 #define TEX_CUBE		0
+#define TEX_CHAR		1
 #define TEX_CUBE_PATH	"assets/cube.tga"
+#define TEX_CHAR_PATH "assets/tex_char.jpg"
+
+#define N_MODELS		1
+#define MODEL_CHAR		0
+#define MODEL_CHAR_PATH "assets/char.obj"

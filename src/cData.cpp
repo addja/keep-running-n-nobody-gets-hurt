@@ -13,3 +13,9 @@ void cData::loadTexture(int i, std::string filename) {
 GLuint cData::getTextureID(int i) {
 	return texture[i];
 }
+
+void cData::loadModel(int i, std::string filename) {
+	models[i].loadModel(filename);
+}
+
+

@@ -4,7 +4,7 @@ CFLAGS=-Wall
 SFMLFLAGS=-lsfml-graphics -lsfml-window -lsfml-system
 LDFLAGS=-lGL -lGLEW
 
-OBJ =main.o cGame.o cGraphics.o cTexture.o cData.o
+OBJ =main.o cGame.o cGraphics.o cTexture.o cData.o cModel.o
 
 all: main
 
@@ -25,7 +25,10 @@ cTexture.o: src/cTexture.cpp
 		
 cData.o: src/cData.cpp
 		$(CC) $(CFLAGS) -c src/cData.cpp
-		
+
+cModel.o: src/cModel.cpp
+		$(CC) $(CFLAGS) -c src/cModel.cpp	
+
 .PHONY: clean
 
 run: clean all
