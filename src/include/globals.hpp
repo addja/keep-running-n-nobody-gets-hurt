@@ -11,6 +11,7 @@
 #include <SFML/OpenGL.hpp>
 
 // math library
+#define GLM_FORCE_RADIANS 1
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtx/transform.hpp>
