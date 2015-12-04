@@ -1,7 +1,6 @@
 #pragma once
 
 #include "globals.hpp"
-#include "cGraphics.hpp"
 #include "cData.hpp"
 
 class cGame {
@@ -14,13 +13,6 @@ class cGame {
 		void render();		
 
 	private:
-		GLuint vertexArrayID;
-		GLuint vertexbuffer; 
-		GLuint uvbuffer; 
-		GLuint programID;		// vertex and fragment shaders		
-		GLuint mvp_handle;		// mvp glsl uniform identifier	
-		GLuint textureID;
-
 		cData data;
 
 		void initOpenGL();
