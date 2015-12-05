@@ -8,8 +8,10 @@ cModel::~cModel() {
 	// Cleanup VBO and shader
  	glDeleteBuffers(1, &vertexbuffer_quads);
 	glDeleteBuffers(1, &uvbuffer_quads);
+	glDeleteBuffers(1, &normalbuffer_quads);
 	glDeleteBuffers(1, &vertexbuffer_triangles);
 	glDeleteBuffers(1, &uvbuffer_triangles);
+	glDeleteBuffers(1, &normalbuffer_triangles);
 	glDeleteProgram(programID);
 	glDeleteTextures(1, &textureID);
 }
@@ -141,23 +143,36 @@ void cModel::initGL() {
 	glGenBuffers(1, &uvbuffer_triangles);
 	glBindBuffer(GL_ARRAY_BUFFER, uvbuffer_triangles);
 	glBufferData(GL_ARRAY_BUFFER, uvs_triangles.size() * sizeof(glm::vec2), &uvs_triangles[0], GL_STATIC_DRAW);
+
+	glGenBuffers(1, &normalbuffer_quads);
+	glBindBuffer(GL_ARRAY_BUFFER, normalbuffer_quads);
+	glBufferData(GL_ARRAY_BUFFER, normals_quads.size() * sizeof(glm::vec3), &normals_quads[0], GL_STATIC_DRAW);
+
+	glGenBuffers(1, &normalbuffer_triangles);
+	glBindBuffer(GL_ARRAY_BUFFER, normalbuffer_triangles);
+	glBufferData(GL_ARRAY_BUFFER, normals_triangles.size() * sizeof(glm::vec3), &normals_triangles[0], GL_STATIC_DRAW);
 	
 	programID = loadShaders("src/shaders/model.vert", "src/shaders/model.frag");
 	
 	mvp_handle = glGetUniformLocation(programID, "MVP");
+	ViewMatrix_handle = glGetUniformLocation(programID, "V");
+	ModelMatrix_handle = glGetUniformLocation(programID, "M");
 	textureID  = glGetUniformLocation(programID, "myTextureSampler");
+	LightID = glGetUniformLocation(programID, "LightPosition_worldspace");
 }
 
 void cModel::render() {
 	// Projection matrix : 45° Field of View, 4:3 ratio, display range : 0.1 unit <-> 100 units
-	glm::mat4 Projection = glm::perspective(glm::radians(50.0f), (float) WNDW_WIDTH / (float)WNDW_HEIGHT, 0.1f, 100.0f);
+	glm::mat4 Projection = glm::perspective(glm::radians(45.0f), (float) WNDW_WIDTH / (float)WNDW_HEIGHT, 0.1f, 100.0f);
 	
 	// Or, for an ortho camera :
 	//glm::mat4 Projection = glm::ortho(-10.0f,10.0f,-10.0f,10.0f,0.0f,100.0f); // In world coordinates
 	
+	glm::vec3 cameraPos = glm::vec3(5,5,5);
+
 	// Camera matrix
 	glm::mat4 View = glm::lookAt(
-	               glm::vec3(3,3,3), // Camera is at (4,3,3), in World Space
+	               cameraPos, // Camera is at (4,3,3), in World Space
 	               glm::vec3(0,0,0), // and looks at the origin
 	               glm::vec3(0,1,0)  // Head is up (set to 0,-1,0 to look upside-down)
 	               );
@@ -173,6 +188,9 @@ void cModel::render() {
 	// Send our transformation to the currently bound shader, in the "MVP" uniform
 	// This is done in the main loop since each model will have a different MVP matrix (At least for the M part)
 	glUniformMatrix4fv(mvp_handle, 1, GL_FALSE, &mvp[0][0]);
+	glUniformMatrix4fv(ModelMatrix_handle, 1, GL_FALSE, &Model[0][0]);
+	glUniformMatrix4fv(ViewMatrix_handle, 1, GL_FALSE, &View[0][0]);
+	glUniform3f(LightID, cameraPos.x, cameraPos.y + 3, cameraPos.z);
 
 	// Bind our texture in Texture Unit 0
 	glActiveTexture(GL_TEXTURE0);
@@ -203,10 +221,23 @@ void cModel::render() {
 	     (void*)0                          // array buffer offset
 	);	
 	
+	// 3rd attribute buffer : normals
+	glEnableVertexAttribArray(2);
+	glBindBuffer(GL_ARRAY_BUFFER, normalbuffer_quads);
+	glVertexAttribPointer(
+		2,                                // attribute
+		3,                                // size
+		GL_FLOAT,                         // type
+		GL_FALSE,                         // normalized?
+		0,                                // stride
+		(void*)0                          // array buffer offset
+	);
+
 	glDrawArrays(GL_QUADS, 0, vertices_quads.size());
 	
 	glDisableVertexAttribArray(0);
 	glDisableVertexAttribArray(1);
+	glDisableVertexAttribArray(2);
 
 	// 1rst attribute buffer : vertices
 	glEnableVertexAttribArray(0);
@@ -230,9 +261,22 @@ void cModel::render() {
 	     0,                                // stride
 	     (void*)0                          // array buffer offset
 	);	
+
+	// 3rd attribute buffer : normals
+	glEnableVertexAttribArray(2);
+	glBindBuffer(GL_ARRAY_BUFFER, normalbuffer_triangles);
+	glVertexAttribPointer(
+		2,                                // attribute
+		3,                                // size
+		GL_FLOAT,                         // type
+		GL_FALSE,                         // normalized?
+		0,                                // stride
+		(void*)0                          // array buffer offset
+	);
 	
 	glDrawArrays(GL_TRIANGLES, 0, vertices_triangles.size());
 	
 	glDisableVertexAttribArray(0);
 	glDisableVertexAttribArray(1);
+	glDisableVertexAttribArray(2);
 }

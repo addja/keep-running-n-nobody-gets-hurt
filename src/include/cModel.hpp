@@ -8,10 +8,15 @@ class cModel {
 	public:
 		GLuint vertexbuffer_quads; 
 		GLuint uvbuffer_quads; 
+		GLuint normalbuffer_quads;
 		GLuint vertexbuffer_triangles;
 		GLuint uvbuffer_triangles;
+		GLuint normalbuffer_triangles;
 		GLuint programID;	
-		GLuint mvp_handle;	
+		GLuint mvp_handle;
+		GLuint ViewMatrix_handle;
+		GLuint ModelMatrix_handle;
+		GLuint LightID;	
 		GLuint textureID;
 		GLuint myTexture;
 
