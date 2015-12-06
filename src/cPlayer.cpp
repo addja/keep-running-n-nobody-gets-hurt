@@ -9,11 +9,12 @@ cPlayer::~cPlayer() {}
 
 void cPlayer::update(float dt) {
 	moveForward();
+	animation();
 }
 
 void cPlayer::render() {
 	// Draw model
-	data->drawModel(MODEL_CHAR,data->getTextureID(TEX_CHAR),position,rotation,scale,angle);
+	data->drawModel(actual_model,data->getTextureID(TEX_CHAR),position,rotation,scale,angle);
 }
 
 void cPlayer::moveForward() {
@@ -28,13 +29,23 @@ void cPlayer::lookRight() {
 	if (angle - PI/2 < 0) angle = 2*PI;
 	else angle -= PI/2;
 	//std::cout << angle << std::endl;
-	//position = glm::vec3(position.x + glm::sin(angle) * 1.5, position.y, position.z + glm::cos(angle) * 1.5);
+	//position = glm::vec3(position.x + glm::sin(angle) * 1, position.y, position.z + glm::cos(angle) * 1);
 }
 void cPlayer::lookLeft() {
 	if (angle + PI/2 > 2*PI) angle = 0;
 	else angle += PI/2;
 	//std::cout << angle << std::endl;
-	//position = glm::vec3(position.x + glm::sin(angle) * 1, position.y, position.z + glm::cos(angle) * 1.5);
+	//position = glm::vec3(position.x + glm::sin(angle) * 1, position.y, position.z + glm::cos(angle) * 1);
+}
+
+void cPlayer::animation() {
+	if (delay < ANIMATION_DELAY) {
+		delay += 1;
+	} else {
+		++actual_model;
+		if (actual_model > MODEL_CHAR12) actual_model = MODEL_CHAR1;
+		delay = 0;
+	}
 }
 
 glm::vec3 cPlayer::getPosition() {
@@ -43,4 +54,20 @@ glm::vec3 cPlayer::getPosition() {
 
 void cPlayer::setPosition(glm::vec3 p) {
 	position = p;
+}
+
+int cPlayer::getActualModel() {
+	return actual_model;
+}
+
+void cPlayer::setActualModel(int model) {
+	actual_model = model;
+}
+
+int cPlayer::getDelay() {
+	return delay;
+}
+
+void cPlayer::setDelay(int d) {
+	delay = d;
 }

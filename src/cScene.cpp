@@ -161,6 +161,6 @@ int cScene::getHeight() {
 }
 
 int cScene::getTile(glm::vec3 p) {
-	//std::cout << floor(playerx) << " " << (int) floor(playerz) + 1 << std::endl; 
-	return map[ceil(playerx)][floor(playerz) + 1];
+	//std::cout << floor(playerx) << " " << ceil(playerz) + 0.5f << std::endl; 
+	return map[ceil(playerx + 0.1f)][ceil(playerz) + 0.5f];
 }
