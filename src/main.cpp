@@ -36,7 +36,20 @@ int main() {
 					//game.resume();
 					break;
 				case sf::Event::KeyPressed:
-					//game.keyPressed(event.key.code);
+					char c;
+					switch (event.key.code) {
+						case sf::Keyboard::A: c = 'A'; break;
+						case sf::Keyboard::D: c = 'D'; break;
+						case sf::Keyboard::S: c = 'S'; break;
+						case sf::Keyboard::W: c = 'W'; break;
+						case sf::Keyboard::Down: c = 'S'; break;
+						case sf::Keyboard::Left: c = 'A'; break;
+						case sf::Keyboard::Right: c = 'D'; break;
+						case sf::Keyboard::Up: c = 'W'; break;
+						case sf::Keyboard::Escape: window.close(); break;
+						default: c = ' '; break;
+					}
+					game.keyPressed(c);
 					break;
 				case sf::Event::KeyReleased:
 					//game.keyReleased(event.key.code);
@@ -49,6 +62,7 @@ int main() {
 		
 		elapsed = clock.getElapsedTime();
 		if (elapsed.asSeconds() > 1.0/60) { // 60 fps = 1.0/60
+			window.setActive();
 			game.update(clock.restart().asSeconds());
 			game.render();
 			window.display();

@@ -7,6 +7,9 @@
 class cData {
 	
 	public:
+		glm::vec3 cameraP;
+		int front;
+
 		cData();
 		~cData();
 
@@ -14,8 +17,8 @@ class cData {
 		void loadDDS(int i, char * filename);
 		GLuint getTextureID(int i);
 
-		void loadModel(int i, std::string filename, GLuint texture);
-		void drawModel(int i);
+		void loadModel(int i, std::string filename);
+		void drawModel(int i, GLuint texture, glm::vec3 p, glm::vec3 r, glm::vec3 s, float a);
 
 	private:
 		GLuint texture[N_TEXTURES];

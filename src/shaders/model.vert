@@ -19,6 +19,11 @@ uniform vec3 LightPosition_worldspace;
 
 void main() {
 	gl_Position = MVP * vec4(vertexPosition_modelspace,1);
+
+	float C = 1.0; 
+	float far = 2000.0;     
+	gl_Position.z = 2.0*log(gl_Position.w*C + 1.0)/log(far*C + 1.0) - 1.0;
+	gl_Position.z *= gl_Position.w;
 	
 	// Position of the vertex, in worldspace : M * position
 	Position_worldspace = (M * vec4(vertexPosition_modelspace,1)).xyz;
@@ -32,7 +37,7 @@ void main() {
 	vec3 LightPosition_cameraspace = ( V * vec4(LightPosition_worldspace,1)).xyz;
 	LightDirection_cameraspace = LightPosition_cameraspace + EyeDirection_cameraspace;
 	
-	// Normal of the the vertex, in camera space
+	// Normal of the vertex, in camera space
 	Normal_cameraspace = ( V * M * vec4(vertexNormal_modelspace,0)).xyz; // Only correct if ModelMatrix does not scale the model ! Use its inverse transpose if not.
 	
 	// UV of the vertex. No special space for this one.

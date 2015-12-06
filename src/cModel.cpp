@@ -16,13 +16,14 @@ cModel::~cModel() {
 	glDeleteTextures(1, &textureID);
 }
 
-void cModel::loadModel(std::string filename, GLuint texture) {
+void cModel::loadModel(std::string filename) {
 	std::vector< unsigned int > vertexIndices, uvIndices, normalIndices, vertexIndices_triangles, uvIndices_triangles, normalIndices_triangles;
 	std::vector< glm::vec3 > temp_vertices;
 	std::vector< glm::vec2 > temp_uvs;
 	std::vector< glm::vec3 > temp_normals;
 
 	FILE * file = fopen(filename.c_str(), "r");
+	std::cout << filename.c_str() << std::endl;
 	if( file == NULL ) {
 		std::cout << "Impossible to open the file!" << std::endl;
 		return;
@@ -120,8 +121,6 @@ void cModel::loadModel(std::string filename, GLuint texture) {
 		normals_triangles.push_back(normal);
 	}
 
-	myTexture = texture;
-
 	initGL();
 
 	printf("loadModel done correctly\n");
@@ -161,24 +160,34 @@ void cModel::initGL() {
 	LightID = glGetUniformLocation(programID, "LightPosition_worldspace");
 }
 
-void cModel::render() {
+void cModel::render(GLuint texture, glm::vec3 p, glm::vec3 r, glm::vec3 s, float angle, glm::vec3 cameraP, int front) {
+
 	// Projection matrix : 45° Field of View, 4:3 ratio, display range : 0.1 unit <-> 100 units
-	glm::mat4 Projection = glm::perspective(glm::radians(45.0f), (float) WNDW_WIDTH / (float)WNDW_HEIGHT, 0.1f, 100.0f);
+	 glm::mat4 Projection = glm::perspective(glm::radians(45.0f), (float) WNDW_WIDTH / (float)WNDW_HEIGHT, 0.1f, 1.0f);
 	
 	// Or, for an ortho camera :
 	//glm::mat4 Projection = glm::ortho(-10.0f,10.0f,-10.0f,10.0f,0.0f,100.0f); // In world coordinates
 	
-	glm::vec3 cameraPos = glm::vec3(5,5,5);
+	glm::vec3 cameraPos = cameraP + glm::vec3(front, 1, front) * glm::vec3(25,25,25);
 
 	// Camera matrix
 	glm::mat4 View = glm::lookAt(
 	               cameraPos, // Camera is at (4,3,3), in World Space
-	               glm::vec3(0,0,0), // and looks at the origin
+	               cameraP, // and looks at the origin
 	               glm::vec3(0,1,0)  // Head is up (set to 0,-1,0 to look upside-down)
 	               );
 	
 	// Model matrix : an identity matrix (model will be at the origin)
-	glm::mat4 Model = glm::mat4(1.0f);
+	glm::mat4 Model = glm::translate(p) * glm::scale(s) * glm::rotate(angle, r);
+
+	// for (int j = 0; j < 4; j++) {
+	// 	for (int jj = 0; jj < 4; jj++) {
+	// 		std::cout << Projection[j][jj] << " ";
+	// 	}
+	// 	std::cout << std::endl;
+	// }
+	// std::cout << "----------------------------------------\n";
+
 	// Our ModelViewProjection : multiplication of our 3 matrices
 	glm::mat4 mvp = Projection * View * Model; // Remember, matrix multiplication is the other way around
 
@@ -190,11 +199,11 @@ void cModel::render() {
 	glUniformMatrix4fv(mvp_handle, 1, GL_FALSE, &mvp[0][0]);
 	glUniformMatrix4fv(ModelMatrix_handle, 1, GL_FALSE, &Model[0][0]);
 	glUniformMatrix4fv(ViewMatrix_handle, 1, GL_FALSE, &View[0][0]);
-	glUniform3f(LightID, cameraPos.x, cameraPos.y + 3, cameraPos.z);
+	glUniform3f(LightID, cameraPos.x, cameraPos.y + 15, cameraPos.z);
 
 	// Bind our texture in Texture Unit 0
 	glActiveTexture(GL_TEXTURE0);
-	glBindTexture(GL_TEXTURE_2D, myTexture);
+	glBindTexture(GL_TEXTURE_2D, texture);
 	// Set our "myTextureSampler" sampler to user Texture Unit 0
 	glUniform1i(textureID, 0);
 

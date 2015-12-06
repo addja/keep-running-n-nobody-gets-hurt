@@ -2,7 +2,10 @@
 
 #include "include/cData.hpp"
 
-cData::cData() {}
+cData::cData() {
+	cameraP = glm::vec3(0,0,0);
+	front = 1;
+}
 
 cData::~cData() {}
 
@@ -18,10 +21,10 @@ GLuint cData::getTextureID(int i) {
 	return texture[i];
 }
 
-void cData::loadModel(int i, std::string filename, GLuint texture) {
-	models[i].loadModel(filename, texture);
+void cData::loadModel(int i, std::string filename) {
+	models[i].loadModel(filename);
 }
 
-void cData::drawModel(int i) {
-	models[i].render();
+void cData::drawModel(int i, GLuint texture, glm::vec3 p, glm::vec3 r, glm::vec3 s, float a) {
+	models[i].render(texture, p, r, s, a, cameraP, front);
 }

@@ -30,9 +30,9 @@ class cModel {
 		cModel();
 		~cModel();
 	
-		void loadModel(std::string filename, GLuint texture);
+		void loadModel(std::string filename);
 		void initGL();
-		void render();
+		void render(GLuint texture, glm::vec3 p, glm::vec3 r, glm::vec3 s, float angle, glm::vec3 cameraP, int front);
 
 	private:
 

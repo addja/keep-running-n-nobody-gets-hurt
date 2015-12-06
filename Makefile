@@ -1,10 +1,10 @@
 BIN=game
 CC=g++
-CFLAGS=-Wall
+CFLAGS=-Wall -std=c++11
 SFMLFLAGS=-lsfml-graphics -lsfml-window -lsfml-system
 LDFLAGS=-lGL -lGLEW
 
-OBJ =main.o cGame.o cGraphics.o cTexture.o cData.o cModel.o
+OBJ =main.o cGame.o cGraphics.o cTexture.o cData.o cModel.o cEntity.o cPlayer.o cScene.o
 
 all: main
 
@@ -28,6 +28,15 @@ cData.o: src/cData.cpp
 
 cModel.o: src/cModel.cpp
 		$(CC) $(CFLAGS) -c src/cModel.cpp	
+
+cEntity.o: src/cEntity.cpp
+		$(CC) $(CFLAGS) -c src/cEntity.cpp	
+
+cPlayer.o: src/cPlayer.cpp
+		$(CC) $(CFLAGS) -c src/cPlayer.cpp	
+
+cScene.o: src/cScene.cpp
+		$(CC) $(CFLAGS) -c src/cScene.cpp	
 
 .PHONY: clean
 
