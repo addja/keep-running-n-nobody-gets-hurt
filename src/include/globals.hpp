@@ -25,17 +25,21 @@
 
 #define GAME_TITLE		"game"
 
-#define N_TEXTURES		4
+#define N_TEXTURES		6
 #define TEX_SOIL		0
 #define TEX_STONE		1
 #define TEX_GRASS		2
 #define TEX_CHAR		3
+#define TEX_COL			4
+#define TEX_GRASSIE 	5
 #define TEX_SOIL_PATH	"assets/soil.jpg"
 #define TEX_STONE_PATH	"assets/stone.jpg"
 #define TEX_GRASS_PATH	"assets/grass.png"
 #define TEX_CHAR_PATH 	"assets/tex_char.jpg"
+#define TEX_COL_PATH 	"assets/column.jpg"
+#define TEX_GRASSIE_PATH 	"assets/grass.png"
 
-#define N_MODELS		13
+#define N_MODELS		15
 #define MODEL_CHAR1		0
 #define MODEL_CHAR2		1
 #define MODEL_CHAR3		2
@@ -49,6 +53,8 @@
 #define MODEL_CHAR11	10
 #define MODEL_CHAR12	11
 #define MODEL_CUBE 		12
+#define MODEL_COL 		13
+#define MODEL_GRASSIE	14
 #define MODEL_CHAR1_PATH "assets/rex1.obj"
 #define MODEL_CHAR2_PATH "assets/rex2.obj"
 #define MODEL_CHAR3_PATH "assets/rex3.obj"
@@ -62,5 +68,7 @@
 #define MODEL_CHAR11_PATH "assets/rex11.obj"
 #define MODEL_CHAR12_PATH "assets/rex12.obj"
 #define MODEL_CUBE_PATH "assets/cube.obj"
+#define MODEL_COL_PATH "assets/column.obj"
+#define MODEL_GRASSIE_PATH "assets/grassie.obj"
 
-#define DEBUG_MODE		1	// 0 off | 1 on
+#define DEBUG_MODE		0	// 0 off | 1 on

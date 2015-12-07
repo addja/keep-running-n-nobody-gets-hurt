@@ -101,7 +101,8 @@ void cScene::drawTile(int j, int k) {
 	switch (map[j][k]) {
 		case 0: break; // Empty block
 		case 1: // Soil
-			drawColumn(j, k, 0, data->getTextureID(TEX_GRASS));
+			drawColumn(j, k, 0, data->getTextureID(TEX_SOIL));
+			//data->drawModel(MODEL_GRASSIE, data->getTextureID(TEX_GRASS), position + glm::vec3(2*j,0.5,-k*2), rotation, scale * glm::vec3(1, 0.5, 1), angle);
 			break;
 		case 2: // Wall
 			drawColumn(j, k, 6, data->getTextureID(TEX_STONE));
@@ -111,16 +112,23 @@ void cScene::drawTile(int j, int k) {
 			drawColumn(j, k, 0, data->getTextureID(TEX_SOIL));
 			break;
 		case 4: // Swap soil
-			drawColumn(j, k, 0, data->getTextureID(TEX_SOIL));
+			drawColumn(j, k, 0, data->getTextureID(TEX_STONE));
 			break;
-		case 5: // Fire column
-			drawColumn(j, k, 2, data->getTextureID(TEX_STONE));
-			drawLittleBlock(j, k, 3, glm::vec3(0.45), data->getTextureID(TEX_SOIL));
+		case 5: // Low columns			
+			drawColumn(j, k, 2, data->getTextureID(TEX_COL));
 			break;
 		case 6: // Wall with a window
 			drawColumn(j, k, 4, data->getTextureID(TEX_STONE));
 			drawLittleBlock(j, k, 8, glm::vec3(1), data->getTextureID(TEX_STONE));
-			drawLittleBlock(j, k, 9, glm::vec3(0.45), data->getTextureID(TEX_SOIL));
+			drawLittleBlock(j, k, 9, glm::vec3(0.1), data->getTextureID(TEX_SOIL));
+			break;
+		case 7: // New grass
+			drawColumn(j, k, 0, data->getTextureID(TEX_SOIL));
+			if (data->front == 1) data->drawModel(MODEL_GRASSIE, data->getTextureID(TEX_GRASS), position + glm::vec3(2*j + 2.5,0.3,-k*2 - 2.5), rotation, scale * glm::vec3(1, 0.5, 1), angle);
+			else data->drawModel(MODEL_GRASSIE, data->getTextureID(TEX_GRASS), position + glm::vec3(2*j + 2.5,0.3,-k*2 - 2.5), rotation, scale * glm::vec3(1, 0.5, 1), angle + PI);
+			break;
+		case 8: // High columns
+			data->drawModel(MODEL_COL, data->getTextureID(TEX_COL), position + glm::vec3(2*j,-1.45,-k*2), rotation, scale * glm::vec3(0.05,0.05,0.05), angle);
 			break;
 		default:
 			break;
@@ -128,12 +136,12 @@ void cScene::drawTile(int j, int k) {
 }
 
 void cScene::drawLittleBlock(int j, int k, int n, glm::vec3 s, GLuint texture) {
-	data->drawModel(MODEL_CUBE, texture, position + glm::vec3(j*2 - data->front*(1 - s.x)/2,-0.5 + n,-k*2 - data->front*(1 - s.z)/2), rotation, scale * s, angle);
+	data->drawModel(MODEL_CUBE, texture, position + glm::vec3(j*2, -0.5 + n,-k*2), rotation, scale * s, angle);
 }
 
 void cScene::drawColumn(int j, int k, int n, GLuint texture) {
 	for (int i = 0; i <= n; i++){
-		data->drawModel(MODEL_CUBE, texture, position + glm::vec3(j*2,-0.5 + i,-k*2), rotation, scale, angle);
+		data->drawModel(MODEL_CUBE, texture, position + glm::vec3(2*j,-0.5 + i,-k*2), rotation, scale, angle);
 	}
 }
 

@@ -6,12 +6,12 @@ cGame::cGame() {
 	initOpenGL();
 	initGame();
 	// Scaled to 1, so we move it up 0.5 (half its bounding box) so it is above the y = 0, which is the soil
-	player = cPlayer(glm::vec3(2.0,0.5,-2.0), glm::vec3(0,1,0), glm::vec3(1), PI, &data);
+	player = cPlayer(glm::vec3(4.0,0.5,-4.0), glm::vec3(0,1,0), glm::vec3(1), PI, &data);
 	player.setActualModel(MODEL_CHAR1);
 	player.setDelay(0);
 	scene = cScene(glm::vec3(0,0,0), glm::vec3(0,1,0), glm::vec3(1), 0, &data);
-	scene.loadLevel(1);
-	scene.setPlayerPosition(glm::vec3(1,0,0));
+	scene.loadLevel(0);
+	scene.setPlayerPosition(glm::vec3(2,1,0));
 }
 
 cGame::~cGame() {
@@ -30,9 +30,9 @@ void cGame::update(float dt) {
 				scene.getTile(player.getPosition()) == 5 || scene.getTile(player.getPosition()) == 6 ||
 				player.getPosition().x/2 < 0 || player.getPosition().x/2 >= scene.getHeight() || 
 				player.getPosition().z/2 > 0 || player.getPosition().z/2 <= -scene.getWidth()) {
-		tmp2 = player.getPosition();
-		player.setPosition(tmp);
-		scene.updatePlayerPosition(tmp - tmp2);
+		//tmp2 = player.getPosition();
+		//player.setPosition(tmp);
+		//scene.updatePlayerPosition(tmp - tmp2);
 		//std::cout << "CANNOT MOVE, BRO  " << tmp2.x << " " << tmp.z << std::endl;
 	}
 	data.cameraP = player.getPosition();
@@ -128,6 +128,8 @@ void cGame::initGame() {
 	data.loadTexture(TEX_SOIL,TEX_SOIL_PATH);
 	data.loadTexture(TEX_STONE,TEX_STONE_PATH);
 	data.loadTexture(TEX_GRASS,TEX_GRASS_PATH);
+	data.loadTexture(TEX_COL,TEX_COL_PATH);
+	data.loadTexture(TEX_GRASSIE,TEX_GRASSIE_PATH);
 	data.loadTexture(TEX_CHAR,TEX_CHAR_PATH);
 	data.loadModel(MODEL_CHAR1,MODEL_CHAR1_PATH);
 	data.loadModel(MODEL_CHAR2,MODEL_CHAR2_PATH);
@@ -142,4 +144,6 @@ void cGame::initGame() {
 	data.loadModel(MODEL_CHAR11,MODEL_CHAR11_PATH);
 	data.loadModel(MODEL_CHAR12,MODEL_CHAR12_PATH);
 	data.loadModel(MODEL_CUBE,MODEL_CUBE_PATH);
+	data.loadModel(MODEL_COL,MODEL_COL_PATH);
+	data.loadModel(MODEL_GRASSIE,MODEL_GRASSIE_PATH);
 }

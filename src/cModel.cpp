@@ -159,7 +159,7 @@ void cModel::initGL() {
 	textureID  = glGetUniformLocation(programID, "myTextureSampler");
 	LightID = glGetUniformLocation(programID, "LightPosition_worldspace");
 
-	if (DEBUG_MODE) calcBBox();
+	calcBBox();
 }
 
 void cModel::render(GLuint texture, glm::vec3 p, glm::vec3 r, glm::vec3 s, float angle, glm::vec3 cameraP, int front) {
@@ -291,7 +291,7 @@ void cModel::render(GLuint texture, glm::vec3 p, glm::vec3 r, glm::vec3 s, float
 	glDisableVertexAttribArray(1);
 	glDisableVertexAttribArray(2);
 
-	renderBBox();
+	if (DEBUG_MODE) renderBBox();
 }
 
 void cModel::calcBBox() {
