@@ -5,7 +5,13 @@
 
 int main() {
 	// create window and initialize it
-    sf::RenderWindow window(sf::VideoMode(WNDW_WIDTH, WNDW_HEIGHT), GAME_TITLE);
+    // sf::RenderWindow window(sf::VideoMode(WNDW_WIDTH, WNDW_HEIGHT), GAME_TITLE);
+
+    sf::ContextSettings Settings;
+	Settings.depthBits         = 24; // Request a 24 bits depth buffer
+	Settings.stencilBits       = 8;  // Request a 8 bits stencil buffer
+	Settings.antialiasingLevel = 2;  // Request 2 levels of antialiasing
+	sf::Window window(sf::VideoMode(WNDW_WIDTH, WNDW_HEIGHT, 32), GAME_TITLE, sf::Style::Close, Settings);
 
     sf::Event event;
 	window.setKeyRepeatEnabled(false); // not count key holding press
