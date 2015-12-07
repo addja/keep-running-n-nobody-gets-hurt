@@ -158,6 +158,8 @@ void cModel::initGL() {
 	ModelMatrix_handle = glGetUniformLocation(programID, "M");
 	textureID  = glGetUniformLocation(programID, "myTextureSampler");
 	LightID = glGetUniformLocation(programID, "LightPosition_worldspace");
+
+	if (DEBUG_MODE) calcBBox();
 }
 
 void cModel::render(GLuint texture, glm::vec3 p, glm::vec3 r, glm::vec3 s, float angle, glm::vec3 cameraP, int front) {
@@ -288,4 +290,67 @@ void cModel::render(GLuint texture, glm::vec3 p, glm::vec3 r, glm::vec3 s, float
 	glDisableVertexAttribArray(0);
 	glDisableVertexAttribArray(1);
 	glDisableVertexAttribArray(2);
+
+	renderBBox();
+}
+
+void cModel::calcBBox() {
+	if (vertices_quads.size() == 0) {
+		maxx = minx = vertices_triangles[0][0];
+		maxy = miny = vertices_triangles[0][1];
+		maxz = minz = vertices_triangles[0][2];
+	}
+	else {
+		maxx = minx = vertices_quads[0][0];
+		maxy = miny = vertices_quads[0][1];
+		maxz = minz = vertices_quads[0][2];
+	}	
+	for (int i = 0; i < (int)vertices_quads.size(); i++) {
+		if (vertices_quads[i][0] < minx) minx = vertices_quads[i][0];
+		else if (vertices_quads[i][0] > maxx) maxx = vertices_quads[i][0];
+		if (vertices_quads[i][1] < miny) miny = vertices_quads[i][1];
+		else if (vertices_quads[i][1] > maxy) maxy = vertices_quads[i][1];
+		if (vertices_quads[i][2] < minz) minz = vertices_quads[i][2];
+		else if (vertices_quads[i][2] > maxz) maxz = vertices_quads[i][2];
+	}
+	for (int i = 0; i < (int)vertices_triangles.size(); i++) {
+		if (vertices_triangles[i][0] < minx) minx = vertices_triangles[i][0];
+		else if (vertices_triangles[i][0] > maxx) maxx = vertices_triangles[i][0];
+		if (vertices_triangles[i][1] < miny) miny = vertices_triangles[i][1];
+		else if (vertices_triangles[i][1] > maxy) maxy = vertices_triangles[i][1];
+		if (vertices_triangles[i][2] < minz) minz = vertices_triangles[i][2];
+		else if (vertices_triangles[i][2] > maxz) maxz = vertices_triangles[i][2];
+	}
+}
+
+void cModel::renderBBox() {
+	// not very efficient but useful and simple (just displayed on debug mode)
+	glBegin(GL_LINE_STRIP);
+		glVertex3f(maxx, maxy, maxz);
+		glVertex3f(minx, maxy, maxz);
+		glVertex3f(minx, maxy, minz);
+		glVertex3f(maxx, maxy, minz);
+		glVertex3f(maxx, maxy, maxz);
+    glEnd();
+	glBegin(GL_LINE_STRIP);
+		glVertex3f(maxx, miny, maxz);
+		glVertex3f(minx, miny, maxz);
+		glVertex3f(minx, miny, minz);
+		glVertex3f(maxx, miny, minz);
+		glVertex3f(maxx, miny, maxz);
+    glEnd();
+	glBegin(GL_LINE_STRIP);
+		glVertex3f(maxx, miny, maxz);
+		glVertex3f(maxx, maxy, maxz);
+		glVertex3f(maxx, maxy, minz);
+		glVertex3f(maxx, miny, minz);
+		glVertex3f(maxx, miny, maxz);
+    glEnd();
+	glBegin(GL_LINE_STRIP);
+		glVertex3f(minx, miny, maxz);
+		glVertex3f(minx, maxy, maxz);
+		glVertex3f(minx, maxy, minz);
+		glVertex3f(minx, miny, minz);
+		glVertex3f(minx, miny, maxz);
+    glEnd();
 }

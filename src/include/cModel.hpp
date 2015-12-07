@@ -20,6 +20,8 @@ class cModel {
 		GLuint textureID;
 		GLuint myTexture;
 
+		float maxx, minx, maxy, miny, maxz, minz;
+
 		std::vector < glm::vec3 > vertices_quads;
 		std::vector < glm::vec2 > uvs_quads;
 		std::vector < glm::vec3 > normals_quads;
@@ -35,5 +37,6 @@ class cModel {
 		void render(GLuint texture, glm::vec3 p, glm::vec3 r, glm::vec3 s, float angle, glm::vec3 cameraP, int front);
 
 	private:
-
+		void calcBBox();
+		void renderBBox();
 };

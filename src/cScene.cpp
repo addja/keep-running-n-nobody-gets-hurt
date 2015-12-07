@@ -46,14 +46,14 @@ void cScene::loadLevel(int id) {
 		res = fscanf(file, "%s", lineHeader);
 	}
 
-	std::cout << std::endl;
-	for (int i = 0; i < (int)map.size(); i++) {
-		for (int j = 0; j < (int)map[i].size(); j++) {
-			std::cout << map[i][j] << " ";
-		}
-		std::cout << std::endl;
-	}
-	std::cout << std::endl;
+//	std::cout << std::endl;
+//	for (int i = 0; i < (int)map.size(); i++) {
+//		for (int j = 0; j < (int)map[i].size(); j++) {
+//			std::cout << map[i][j] << " ";
+//		}
+//		std::cout << std::endl;
+//	}
+//	std::cout << std::endl;
 }
 
 void cScene::update(float dt) {

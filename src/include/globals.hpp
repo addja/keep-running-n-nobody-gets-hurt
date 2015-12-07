@@ -62,3 +62,5 @@
 #define MODEL_CHAR11_PATH "assets/rex11.obj"
 #define MODEL_CHAR12_PATH "assets/rex12.obj"
 #define MODEL_CUBE_PATH "assets/cube.obj"
+
+#define DEBUG_MODE		1	// 0 off | 1 on
