@@ -5,7 +5,7 @@
 cGame::cGame() {
 	initOpenGL();
 	initGame();
-	// Scaled to 1, so we move it up 0.5 (half its bounding box) so it is above the y = 0, which is the soil
+	// Scaled to 1, so we move it up 0.5 (half its bounding box) so it is above the y = 0, which is the ground
 	player = cPlayer(glm::vec3(4.0,0.5,-4.0), glm::vec3(0,1,0), glm::vec3(1), PI, &data);
 	player.setActualModel(MODEL_CHAR1);
 	player.setDelay(0);
@@ -28,8 +28,8 @@ void cGame::update(float dt) {
 		std::cout << "DOOR TILE -> PORTAL" << std::endl;	
 	} else if (scene.getTile(player.getPosition()) == 0 || scene.getTile(player.getPosition()) == 2 ||
 				scene.getTile(player.getPosition()) == 5 || scene.getTile(player.getPosition()) == 6 ||
-				player.getPosition().x/2 < 0 || player.getPosition().x/2 >= scene.getHeight() || 
-				player.getPosition().z/2 > 0 || player.getPosition().z/2 <= -scene.getWidth()) {
+				player.getPosition().x/TILE_SIZE < 0 || player.getPosition().x/TILE_SIZE >= scene.getHeight() || 
+				player.getPosition().z/TILE_SIZE > 0 || player.getPosition().z/TILE_SIZE <= -scene.getWidth()) {
 		//tmp2 = player.getPosition();
 		//player.setPosition(tmp);
 		//scene.updatePlayerPosition(tmp - tmp2);
@@ -66,8 +66,8 @@ void cGame::keyPressed(char c) {
 				std::cout << "DOOR TILE -> PORTAL" << std::endl;	
 			} else if (scene.getTile(player.getPosition()) == 0 || scene.getTile(player.getPosition()) == 2 ||
 						scene.getTile(player.getPosition()) == 5 || scene.getTile(player.getPosition()) == 6 ||
-						player.getPosition().x/2 < 0 || player.getPosition().x/2 >= scene.getHeight() || 
-						player.getPosition().z/2 > 0 || player.getPosition().z/2 <= -scene.getWidth()) {
+						player.getPosition().x/TILE_SIZE < 0 || player.getPosition().x/TILE_SIZE >= scene.getHeight() || 
+						player.getPosition().z/TILE_SIZE > 0 || player.getPosition().z/TILE_SIZE <= -scene.getWidth()) {
 				tmp2 = player.getPosition();
 				player.setPosition(tmp);
 				scene.updatePlayerPosition(tmp - tmp2);

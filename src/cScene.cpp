@@ -102,7 +102,7 @@ void cScene::drawTile(int j, int k) {
 		case 0: break; // Empty block
 		case 1: // Soil
 			drawColumn(j, k, 0, data->getTextureID(TEX_SOIL));
-			//data->drawModel(MODEL_GRASSIE, data->getTextureID(TEX_GRASS), position + glm::vec3(2*j,0.5,-k*2), rotation, scale * glm::vec3(1, 0.5, 1), angle);
+			//data->drawModel(MODEL_GRASSIE, data->getTextureID(TEX_GRASS), position + glm::vec3(TILE_SIZE*j,0.5,-k*TILE_SIZE), rotation, scale * glm::vec3(1, 0.5, 1), angle);
 			break;
 		case 2: // Wall
 			drawColumn(j, k, 6, data->getTextureID(TEX_STONE));
@@ -124,11 +124,11 @@ void cScene::drawTile(int j, int k) {
 			break;
 		case 7: // New grass
 			drawColumn(j, k, 0, data->getTextureID(TEX_SOIL));
-			if (data->front == 1) data->drawModel(MODEL_GRASSIE, data->getTextureID(TEX_GRASS), position + glm::vec3(2*j + 2.5,0.3,-k*2 - 2.5), rotation, scale * glm::vec3(1, 0.5, 1), angle);
-			else data->drawModel(MODEL_GRASSIE, data->getTextureID(TEX_GRASS), position + glm::vec3(2*j + 2.5,0.3,-k*2 - 2.5), rotation, scale * glm::vec3(1, 0.5, 1), angle + PI);
+			if (data->front == 1) data->drawModel(MODEL_GRASSIE, data->getTextureID(TEX_GRASS), position + glm::vec3(TILE_SIZE*j + 2.5,0.3,-k*TILE_SIZE - 2.5), rotation, scale * glm::vec3(1, 0.5, 1), angle);
+			else data->drawModel(MODEL_GRASSIE, data->getTextureID(TEX_GRASS), position + glm::vec3(TILE_SIZE*j + 2.5,0.3,-k*TILE_SIZE - 2.5), rotation, scale * glm::vec3(1, 0.5, 1), angle + PI);
 			break;
 		case 8: // High columns
-			data->drawModel(MODEL_COL, data->getTextureID(TEX_COL), position + glm::vec3(2*j,-1.45,-k*2), rotation, scale * glm::vec3(0.05,0.05,0.05), angle);
+			data->drawModel(MODEL_COL, data->getTextureID(TEX_COL), position + glm::vec3(TILE_SIZE*j,-1.45,-k*TILE_SIZE), rotation, scale * glm::vec3(0.05,0.05,0.05), angle);
 			break;
 		default:
 			break;
@@ -136,18 +136,18 @@ void cScene::drawTile(int j, int k) {
 }
 
 void cScene::drawLittleBlock(int j, int k, int n, glm::vec3 s, GLuint texture) {
-	data->drawModel(MODEL_CUBE, texture, position + glm::vec3(j*2, -0.5 + n,-k*2), rotation, scale * s, angle);
+	data->drawModel(MODEL_CUBE, texture, position + glm::vec3(j*TILE_SIZE, -0.5 + n,-k*TILE_SIZE), rotation, scale * s, angle);
 }
 
 void cScene::drawColumn(int j, int k, int n, GLuint texture) {
 	for (int i = 0; i <= n; i++){
-		data->drawModel(MODEL_CUBE, texture, position + glm::vec3(2*j,-0.5 + i,-k*2), rotation, scale, angle);
+		data->drawModel(MODEL_CUBE, texture, position + glm::vec3(TILE_SIZE*j,-0.5 + i,-k*TILE_SIZE), rotation, scale, angle);
 	}
 }
 
 void cScene::updatePlayerPosition(glm::vec3 dp) {
-	playerx += (floorf(dp.x * 100) / 100)/2;
-	playerz -= (floorf(dp.z * 100) / 100)/2;
+	playerx += (floorf(dp.x * 100) / 100)/TILE_SIZE;
+	playerz -= (floorf(dp.z * 100) / 100)/TILE_SIZE;
 	if (playerx < 0) playerx = 0;
 	else if (playerx > map_height - 1) playerx = map_height - 1;
 	if (playerz < 0) playerz = 0;

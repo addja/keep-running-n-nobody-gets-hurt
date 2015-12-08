@@ -71,4 +71,5 @@
 #define MODEL_COL_PATH "assets/column.obj"
 #define MODEL_GRASSIE_PATH "assets/grassie.obj"
 
-#define DEBUG_MODE		0	// 0 off | 1 on
+#define DEBUG_MODE		1	// 0 off | 1 on
+#define TILE_SIZE		2
