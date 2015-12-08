@@ -227,7 +227,7 @@ void cModel::render(GLuint texture, glm::vec3 p, glm::vec3 r, glm::vec3 s, float
 	     1,                                // attribute. No particular reason for 1, but must match the layout in the shader.
 	     2,                                // size
 	     GL_FLOAT,	                       // type
-	     GL_FALSE,                         // normalized?
+	     GL_TRUE,                         // normalized?
 	     0,                                // stride
 	     (void*)0                          // array buffer offset
 	);	
@@ -268,7 +268,7 @@ void cModel::render(GLuint texture, glm::vec3 p, glm::vec3 r, glm::vec3 s, float
 	     1,                                // attribute. No particular reason for 1, but must match the layout in the shader.
 	     2,                                // size
 	     GL_FLOAT,	                       // type
-	     GL_FALSE,                         // normalized?
+	     GL_TRUE,                         // normalized?
 	     0,                                // stride
 	     (void*)0                          // array buffer offset
 	);	
