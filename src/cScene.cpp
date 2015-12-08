@@ -146,13 +146,8 @@ void cScene::drawColumn(int j, int k, int n, GLuint texture) {
 }
 
 void cScene::updatePlayerPosition(glm::vec3 dp) {
-	playerx += (floorf(dp.x * 100) / 100)/TILE_SIZE;
-	playerz -= (floorf(dp.z * 100) / 100)/TILE_SIZE;
-	if (playerx < 0) playerx = 0;
-	else if (playerx > map_height - 1) playerx = map_height - 1;
-	if (playerz < 0) playerz = 0;
-	else if (playerz > map_width - 2) playerz = map_width - 2;
-	//std::cout << playerx << " " << playerz << std::endl; 
+	playerx = dp.x/TILE_SIZE;
+	playerz = dp.z/TILE_SIZE;
 }
 
 void cScene::setPlayerPosition(glm::vec3 p) {
@@ -171,4 +166,12 @@ int cScene::getHeight() {
 int cScene::getTile(glm::vec3 p) {
 	//std::cout << floor(playerx) << " " << ceil(playerz) + 0.5f << std::endl; 
 	return map[ceil(playerx + 0.1f)][ceil(playerz) + 0.5f];
+}
+
+bool cScene::illegalMov() {
+	if (playerx < 0 || playerx >= map_height-1 || // -+1 because the player fits two tiles and it's center is on the middle 
+					playerz > 0 || playerz <= -map_width+1) {
+		return true;
+	}
+	return false;
 }

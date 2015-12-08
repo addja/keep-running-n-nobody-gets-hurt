@@ -18,23 +18,33 @@ cGame::~cGame() {
 }
 
 void cGame::update(float dt) {
-	glm::vec3 tmp, tmp2;
+	glm::vec3 tmp;
 	tmp = player.getPosition();
 	player.update(dt);
-	scene.updatePlayerPosition(player.getPosition() - tmp);
-	if (scene.getTile(player.getPosition()) == 4) {
-		std::cout << "SWAP TILE" << std::endl;				
-	} else if (scene.getTile(player.getPosition()) == 3) {
-		std::cout << "DOOR TILE -> PORTAL" << std::endl;	
-	} else if (scene.getTile(player.getPosition()) == 0 || scene.getTile(player.getPosition()) == 2 ||
-				scene.getTile(player.getPosition()) == 5 || scene.getTile(player.getPosition()) == 6 ||
-				player.getPosition().x/TILE_SIZE < 0 || player.getPosition().x/TILE_SIZE >= scene.getHeight() || 
-				player.getPosition().z/TILE_SIZE > 0 || player.getPosition().z/TILE_SIZE <= -scene.getWidth()) {
-		//tmp2 = player.getPosition();
-		//player.setPosition(tmp);
-		//scene.updatePlayerPosition(tmp - tmp2);
-		//std::cout << "CANNOT MOVE, BRO  " << tmp2.x << " " << tmp.z << std::endl;
+	scene.updatePlayerPosition(player.getPosition());
+//	if (scene.getTile(player.getPosition()) == 4) {
+//		std::cout << "SWAP TILE" << std::endl;				
+//	} else if (scene.getTile(player.getPosition()) == 3) {
+//		std::cout << "DOOR TILE -> PORTAL" << std::endl;	
+//	} else if (scene.getTile(player.getPosition()) == 0 || scene.getTile(player.getPosition()) == 2 ||
+//				scene.getTile(player.getPosition()) == 5 || scene.getTile(player.getPosition()) == 6 ||
+//				player.getPosition().x/TILE_SIZE < 0 || player.getPosition().x/TILE_SIZE >= scene.getHeight() || 
+//				player.getPosition().z/TILE_SIZE > 0 || player.getPosition().z/TILE_SIZE <= -scene.getWidth()) {
+//		//tmp2 = player.getPosition();
+//		//player.setPosition(tmp);
+//		//scene.updatePlayerPosition(tmp - tmp2);
+//		//std::cout << "CANNOT MOVE, BRO  " << tmp2.x << " " << tmp.z << std::endl;
+//	}
+	if (scene.illegalMov()) {
+		player.setPosition(tmp);
 	}
+//	else if (scene.itemCollected()) {
+//		TODO
+//	}
+//	else if (scene.playerHit()) {
+//		TODO
+//	}
+
 	data.cameraP = player.getPosition();
 	// scene.update();
 }
@@ -51,15 +61,14 @@ void cGame::render() {
 	player.render();	
 }
 
-glm::vec3 tmp;
-glm::vec3 tmp2;
 
 void cGame::keyPressed(char c) {
+	glm::vec3 tmp;
 	switch (c) {
 		case 'W':
 			tmp = player.getPosition();
 			player.moveForward();
-			scene.updatePlayerPosition(player.getPosition() - tmp);
+			scene.updatePlayerPosition(player.getPosition());
 			if (scene.getTile(player.getPosition()) == 4) {
 				std::cout << "SWAP TILE" << std::endl;				
 			} else if (scene.getTile(player.getPosition()) == 3) {
@@ -68,9 +77,8 @@ void cGame::keyPressed(char c) {
 						scene.getTile(player.getPosition()) == 5 || scene.getTile(player.getPosition()) == 6 ||
 						player.getPosition().x/TILE_SIZE < 0 || player.getPosition().x/TILE_SIZE >= scene.getHeight() || 
 						player.getPosition().z/TILE_SIZE > 0 || player.getPosition().z/TILE_SIZE <= -scene.getWidth()) {
-				tmp2 = player.getPosition();
 				player.setPosition(tmp);
-				scene.updatePlayerPosition(tmp - tmp2);
+				scene.updatePlayerPosition(tmp);
 				//std::cout << "CANNOT MOVE, BRO  " << tmp2.x << " " << tmp.z << std::endl;
 			}
 			break;
@@ -78,18 +86,16 @@ void cGame::keyPressed(char c) {
 			// DEPRECATED: NO MOVING DOWN FOR OUR BOY.
 			break;
 		case 'D':
-			tmp = player.getPosition();
 			player.lookRight();
-			scene.updatePlayerPosition(player.getPosition() - tmp);
+			scene.updatePlayerPosition(player.getPosition());
 			if (scene.getTile(player.getPosition()) == 4) {
 				std::cout << "SWAP TILE" << std::endl;
 				data.front = 1;
 			}
 			break;
 		case 'A':
-			tmp = player.getPosition();
 			player.lookLeft();
-			scene.updatePlayerPosition(player.getPosition() - tmp);
+			scene.updatePlayerPosition(player.getPosition());
 			if (scene.getTile(player.getPosition()) == 4) {
 				std::cout << "SWAP TILE" << std::endl;
 				data.front = -1;
@@ -118,7 +124,6 @@ void cGame::initOpenGL() {
 	glDepthRange(0.1f, 1.0f);	
 
 	// Cull triangles which normal is not towards the camera
-	glEnable(GL_CULL_FACE);
 	glCullFace(GL_BACK);
 
 	printf("iniOpenGL done correctly\n");

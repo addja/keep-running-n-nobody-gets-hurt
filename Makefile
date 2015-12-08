@@ -4,7 +4,7 @@ CFLAGS=-Wall
 SFMLFLAGS=-lsfml-graphics -lsfml-window -lsfml-system
 LDFLAGS=-lGL -lGLEW
 
-OBJ =main.o cGame.o cGraphics.o cTexture.o cData.o cModel.o cEntity.o cPlayer.o cScene.o
+OBJ =cGraphics.o cTexture.o cData.o cModel.o cEntity.o cPlayer.o cScene.o main.o cGame.o 
 
 all: main
 

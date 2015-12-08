@@ -26,6 +26,10 @@ class cScene : cEntity {
 		int getHeight();
 		int getTile(glm::vec3 position);
 
+		bool illegalMov();
+		bool itemCollected();
+		bool playerHit();
+
 	private:
 		std::vector< std::vector<int> > map;
 		int map_width, map_height;
