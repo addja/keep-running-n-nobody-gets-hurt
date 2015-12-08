@@ -18,7 +18,9 @@ int main() {
 	sf::Time elapsed;
 
 	// create menu
+	window.setActive();
 	cMenu menu = cMenu();
+	menu.render();
 	menu.render();
 	window.display();
 

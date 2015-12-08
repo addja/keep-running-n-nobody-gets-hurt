@@ -3,7 +3,7 @@
 #include "globals.hpp"
 #include "cEntity.hpp"
 
-#define PLAYER_STEP 0.4f
+#define PLAYER_STEP 0.3f
 #define ANIMATION_DELAY	8
 
 class cPlayer : cEntity {

@@ -46,6 +46,10 @@ void cGame::update(float dt) {
 		player.moveForward();
 		player.moveForward();
 		player.moveForward();
+		player.moveForward();
+		player.moveForward();
+		player.moveForward();
+		player.moveForward();
 		scene.updatePlayerPosition(player.getPosition());
 	}
 

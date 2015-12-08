@@ -48,7 +48,7 @@
 #define TEX_CHAR_PATH 			"assets/tex_char.jpg"
 #define TEX_COL_PATH 			"assets/column.jpg"
 #define TEX_GRASSIE_PATH	 	"assets/grass.png"
-#define TEX_TREE_BODY_PATH 		"assets/tree_body.png"
+#define TEX_TREE_BODY_PATH 		"assets/tree_body.jpg"
 #define TEX_TREE_LEAVES_PATH	"assets/tree_leaf.png"
 #define TEX_AUTUMN_LEAVES_PATH 	"assets/autumn_leaf.png"
 #define TEX_STONE1_PATH 		"assets/stone1.jpg"
