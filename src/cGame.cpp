@@ -6,11 +6,11 @@ cGame::cGame() {
 	initOpenGL();
 	initGame();
 	// Scaled to 1, so we move it up 0.5 (half its bounding box) so it is above the y = 0, which is the ground
-	player = cPlayer(glm::vec3(4.0,0.5,-4.0), glm::vec3(0,1,0), glm::vec3(1), PI, &data);
+	player = cPlayer(glm::vec3(2.0,0.5,-2.0), glm::vec3(0,1,0), glm::vec3(1), PI, &data);
 	player.setActualModel(MODEL_CHAR1);
 	player.setDelay(0);
 	scene = cScene(glm::vec3(0,0,0), glm::vec3(0,1,0), glm::vec3(1), 0, &data);
-	scene.loadLevel(0);
+	scene.loadLevel(1);
 	scene.setPlayerPosition(glm::vec3(2,1,0));
 }
 
@@ -22,19 +22,7 @@ void cGame::update(float dt) {
 	tmp = player.getPosition();
 	player.update(dt);
 	scene.updatePlayerPosition(player.getPosition());
-//	if (scene.getTile(player.getPosition()) == 4) {
-//		std::cout << "SWAP TILE" << std::endl;				
-//	} else if (scene.getTile(player.getPosition()) == 3) {
-//		std::cout << "DOOR TILE -> PORTAL" << std::endl;	
-//	} else if (scene.getTile(player.getPosition()) == 0 || scene.getTile(player.getPosition()) == 2 ||
-//				scene.getTile(player.getPosition()) == 5 || scene.getTile(player.getPosition()) == 6 ||
-//				player.getPosition().x/TILE_SIZE < 0 || player.getPosition().x/TILE_SIZE >= scene.getHeight() || 
-//				player.getPosition().z/TILE_SIZE > 0 || player.getPosition().z/TILE_SIZE <= -scene.getWidth()) {
-//		//tmp2 = player.getPosition();
-//		//player.setPosition(tmp);
-//		//scene.updatePlayerPosition(tmp - tmp2);
-//		//std::cout << "CANNOT MOVE, BRO  " << tmp2.x << " " << tmp.z << std::endl;
-//	}
+
 	if (scene.illegalMov()) {
 		player.setPosition(tmp);
 	}
@@ -44,6 +32,22 @@ void cGame::update(float dt) {
 //	else if (scene.playerHit()) {
 //		TODO
 //	}
+ 	else if (scene.swapTile()) {
+		if (data.front == 1) data.front = -1;
+		else data.front = 1;
+
+		player.moveForward();
+		player.moveForward();
+		player.moveForward();
+		player.moveForward();
+		player.moveForward();
+		player.moveForward();
+		player.moveForward();
+		player.moveForward();
+		player.moveForward();
+		player.moveForward();
+		scene.updatePlayerPosition(player.getPosition());
+	}
 
 	data.cameraP = player.getPosition();
 	// scene.update();
@@ -69,37 +73,55 @@ void cGame::keyPressed(char c) {
 			tmp = player.getPosition();
 			player.moveForward();
 			scene.updatePlayerPosition(player.getPosition());
-			if (scene.getTile(player.getPosition()) == 4) {
-				std::cout << "SWAP TILE" << std::endl;				
-			} else if (scene.getTile(player.getPosition()) == 3) {
-				std::cout << "DOOR TILE -> PORTAL" << std::endl;	
-			} else if (scene.getTile(player.getPosition()) == 0 || scene.getTile(player.getPosition()) == 2 ||
-						scene.getTile(player.getPosition()) == 5 || scene.getTile(player.getPosition()) == 6 ||
-						player.getPosition().x/TILE_SIZE < 0 || player.getPosition().x/TILE_SIZE >= scene.getHeight() || 
-						player.getPosition().z/TILE_SIZE > 0 || player.getPosition().z/TILE_SIZE <= -scene.getWidth()) {
+			if (scene.illegalMov()) {
 				player.setPosition(tmp);
-				scene.updatePlayerPosition(tmp);
-				//std::cout << "CANNOT MOVE, BRO  " << tmp2.x << " " << tmp.z << std::endl;
 			}
+			//	else if (scene.itemCollected()) {
+			//		TODO
+			//	}
+			//	else if (scene.playerHit()) {
+			//		TODO
+			//	}
+			//  else if (scene.swapTile()) {
+			//		TODO
+			//	}
 			break;
 		case 'S':
 			// DEPRECATED: NO MOVING DOWN FOR OUR BOY.
 			break;
 		case 'D':
+			tmp = player.getPosition();
 			player.lookRight();
 			scene.updatePlayerPosition(player.getPosition());
-			if (scene.getTile(player.getPosition()) == 4) {
-				std::cout << "SWAP TILE" << std::endl;
-				data.front = 1;
+			if (scene.illegalMov()) {
+				player.setPosition(tmp);
 			}
+			//	else if (scene.itemCollected()) {
+			//		TODO
+			//	}
+			//	else if (scene.playerHit()) {
+			//		TODO
+			//	}
+			//  else if (scene.swapTile()) {
+			//		TODO
+			//	}
 			break;
 		case 'A':
+			tmp = player.getPosition();
 			player.lookLeft();
 			scene.updatePlayerPosition(player.getPosition());
-			if (scene.getTile(player.getPosition()) == 4) {
-				std::cout << "SWAP TILE" << std::endl;
-				data.front = -1;
+			if (scene.illegalMov()) {
+				player.setPosition(tmp);
 			}
+			//	else if (scene.itemCollected()) {
+			//		TODO
+			//	}
+			//	else if (scene.playerHit()) {
+			//		TODO
+			//	}
+			//  else if (scene.swapTile()) {
+			//		TODO
+			//	}
 			break;
 	}
 }
@@ -136,6 +158,15 @@ void cGame::initGame() {
 	data.loadTexture(TEX_COL,TEX_COL_PATH);
 	data.loadTexture(TEX_GRASSIE,TEX_GRASSIE_PATH);
 	data.loadTexture(TEX_CHAR,TEX_CHAR_PATH);
+	data.loadTexture(TEX_TREE_BODY,TEX_TREE_BODY_PATH);
+	data.loadTexture(TEX_AUTUMN_LEAVES,TEX_AUTUMN_LEAVES_PATH);
+	data.loadTexture(TEX_TREE_LEAVES,TEX_TREE_LEAVES_PATH);
+	data.loadTexture(TEX_STONE1,TEX_STONE1_PATH);
+	data.loadTexture(TEX_STONE2,TEX_STONE2_PATH);
+	data.loadTexture(TEX_STONE3,TEX_STONE3_PATH);
+	data.loadTexture(TEX_STONE4,TEX_STONE4_PATH);
+	data.loadTexture(TEX_STONE5,TEX_STONE5_PATH);
+	data.loadTexture(TEX_STOP_SIGN,TEX_STOP_SIGN_PATH);
 	data.loadModel(MODEL_CHAR1,MODEL_CHAR1_PATH);
 	data.loadModel(MODEL_CHAR2,MODEL_CHAR2_PATH);
 	data.loadModel(MODEL_CHAR3,MODEL_CHAR3_PATH);
@@ -151,4 +182,15 @@ void cGame::initGame() {
 	data.loadModel(MODEL_CUBE,MODEL_CUBE_PATH);
 	data.loadModel(MODEL_COL,MODEL_COL_PATH);
 	data.loadModel(MODEL_GRASSIE,MODEL_GRASSIE_PATH);
+	data.loadModel(MODEL_AUTUMN_BODY,MODEL_AUTUMN_BODY_PATH);
+	data.loadModel(MODEL_AUTUMN_LEAVES,MODEL_AUTUMN_LEAVES_PATH);
+	data.loadModel(MODEL_TREE_BODY,MODEL_TREE_BODY_PATH);
+	data.loadModel(MODEL_TREE_LEAVES,MODEL_TREE_LEAVES_PATH);
+	data.loadModel(MODEL_STONE1,MODEL_STONE1_PATH);
+	data.loadModel(MODEL_STONE2,MODEL_STONE2_PATH);
+	data.loadModel(MODEL_STONE3,MODEL_STONE3_PATH);
+	data.loadModel(MODEL_STONE4,MODEL_STONE4_PATH);
+	data.loadModel(MODEL_STONE5,MODEL_STONE5_PATH);
+	data.loadModel(MODEL_STOP_SIGN,MODEL_STOP_SIGN_PATH);
 }
+

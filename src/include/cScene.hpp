@@ -31,6 +31,7 @@ class cScene : cEntity {
 		bool itemCollected();
 		bool playerHit();
 		bool correctStep(int i);
+		bool swapTile();
 
 	private:
 		std::vector< std::vector<int> > map;

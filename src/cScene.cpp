@@ -117,11 +117,13 @@ void cScene::drawTile(int j, int k) {
 			//data->drawModel(MODEL_GRASSIE, data->getTextureID(TEX_GRASS), position + glm::vec3(TILE_SIZE*j,0.5,-k*TILE_SIZE), rotation, scale * glm::vec3(1, 0.5, 1), angle);
 			break;
 		case 2: // Wall
-			drawColumn(j, k, 6, data->getTextureID(TEX_STONE));
-			drawLittleBlock(j, k, 7, glm::vec3(0.45), data->getTextureID(TEX_SOIL));
+			drawColumn(j, k, 4, data->getTextureID(TEX_COL));
+			//drawLittleBlock(j, k, 7, glm::vec3(0.45), data->getTextureID(TEX_SOIL));
 			break;
-		case 3: // Door
-			drawColumn(j, k, 0, data->getTextureID(TEX_SOIL));
+		case 3: // Wall 2
+			drawColumn(j, k, 5, data->getTextureID(TEX_COL));
+			//drawLittleBlock(j, k, 7, glm::vec3(0.45), data->getTextureID(TEX_SOIL));
+			break;
 			break;
 		case 4: // Swap soil
 			drawColumn(j, k, 0, data->getTextureID(TEX_STONE));
@@ -136,11 +138,55 @@ void cScene::drawTile(int j, int k) {
 			break;
 		case 7: // New grass
 			drawColumn(j, k, 0, data->getTextureID(TEX_SOIL));
-			if (data->front == 1) data->drawModel(MODEL_GRASSIE, data->getTextureID(TEX_GRASS), position + glm::vec3(TILE_SIZE*j + 2.5,0.3,-k*TILE_SIZE - 2.5), rotation, scale * glm::vec3(1, 0.5, 1), angle);
-			else data->drawModel(MODEL_GRASSIE, data->getTextureID(TEX_GRASS), position + glm::vec3(TILE_SIZE*j + 2.5,0.3,-k*TILE_SIZE - 2.5), rotation, scale * glm::vec3(1, 0.5, 1), angle + PI);
+			if (data->front == 1) data->drawModel(MODEL_GRASSIE, data->getTextureID(TEX_GRASS), position + glm::vec3(TILE_SIZE*j,0,-k*TILE_SIZE), rotation, scale, angle);
+			else data->drawModel(MODEL_GRASSIE, data->getTextureID(TEX_GRASS), position + glm::vec3(TILE_SIZE*j,0,-k*TILE_SIZE), rotation, scale, angle + PI);
 			break;
 		case 8: // High columns
-			data->drawModel(MODEL_COL, data->getTextureID(TEX_COL), position + glm::vec3(TILE_SIZE*j,-1.45,-k*TILE_SIZE), rotation, scale * glm::vec3(0.05,0.05,0.05), angle);
+			data->drawModel(MODEL_COL, data->getTextureID(TEX_COL), position + glm::vec3(TILE_SIZE*j,-0.5,-k*TILE_SIZE), rotation, scale, angle);
+			break;
+		case 9: // Normal tree
+			drawColumn(j, k, 0, data->getTextureID(TEX_SOIL));
+			if (data->front == 1) {
+				data->drawModel(MODEL_TREE_BODY, data->getTextureID(TEX_TREE_BODY), position + glm::vec3(TILE_SIZE*j, 0.5,-k*TILE_SIZE), rotation, scale, angle);
+				data->drawModel(MODEL_TREE_LEAVES, data->getTextureID(TEX_TREE_LEAVES), position + glm::vec3(TILE_SIZE*j, 0.5,-k*TILE_SIZE), rotation, scale, angle);
+			} else {
+				data->drawModel(MODEL_TREE_BODY, data->getTextureID(TEX_TREE_BODY), position + glm::vec3(TILE_SIZE*j, 0.5,-k*TILE_SIZE), rotation, scale, angle + PI);
+				data->drawModel(MODEL_TREE_LEAVES, data->getTextureID(TEX_TREE_LEAVES), position + glm::vec3(TILE_SIZE*j, 0.5,-k*TILE_SIZE), rotation, scale, angle + PI);
+			}
+			break;
+		case 10: // Autumn tree
+			drawColumn(j, k, 0, data->getTextureID(TEX_SOIL));
+			if (data->front == 1) {
+				data->drawModel(MODEL_AUTUMN_BODY, data->getTextureID(TEX_TREE_BODY), position + glm::vec3(TILE_SIZE*j, 0.5,-k*TILE_SIZE), rotation, scale, angle);
+				data->drawModel(MODEL_AUTUMN_LEAVES, data->getTextureID(TEX_AUTUMN_LEAVES), position + glm::vec3(TILE_SIZE*j, 0.5,-k*TILE_SIZE), rotation, scale, angle);
+			} else {
+				data->drawModel(MODEL_AUTUMN_BODY, data->getTextureID(TEX_TREE_BODY), position + glm::vec3(TILE_SIZE*j, 0.5,-k*TILE_SIZE), rotation, scale, angle + PI);
+				data->drawModel(MODEL_AUTUMN_LEAVES, data->getTextureID(TEX_AUTUMN_LEAVES), position + glm::vec3(TILE_SIZE*j, 0.5,-k*TILE_SIZE), rotation, scale, angle + PI);
+			}
+			break;
+		case 11: // Stone 1
+			drawColumn(j, k, 0, data->getTextureID(TEX_SOIL));
+			data->drawModel(MODEL_STONE1, data->getTextureID(TEX_STONE1), position + glm::vec3(TILE_SIZE*j, 0.5,-k*TILE_SIZE), rotation, scale, angle);
+			break;
+		case 12: // Stone 2
+			drawColumn(j, k, 0, data->getTextureID(TEX_SOIL));
+			data->drawModel(MODEL_STONE2, data->getTextureID(TEX_STONE2), position + glm::vec3(TILE_SIZE*j, 0.5,-k*TILE_SIZE), rotation, scale, angle);
+			break;
+		case 13: // Stone 3
+			drawColumn(j, k, 0, data->getTextureID(TEX_SOIL));
+			data->drawModel(MODEL_STONE3, data->getTextureID(TEX_STONE3), position + glm::vec3(TILE_SIZE*j, 0.5,-k*TILE_SIZE), rotation, scale, angle);
+			break;
+		case 14: // Stone 4
+			drawColumn(j, k, 0, data->getTextureID(TEX_SOIL));
+			data->drawModel(MODEL_STONE4, data->getTextureID(TEX_STONE4), position + glm::vec3(TILE_SIZE*j, 0.5,-k*TILE_SIZE), rotation, scale, angle);
+			break;
+		case 15: // Stone 5
+			drawColumn(j, k, 0, data->getTextureID(TEX_SOIL));
+			data->drawModel(MODEL_STONE5, data->getTextureID(TEX_STONE5), position + glm::vec3(TILE_SIZE*j, 0.5,-k*TILE_SIZE), rotation, scale, angle);
+			break;
+		case 16: // Stop sign
+			drawColumn(j, k, 0, data->getTextureID(TEX_SOIL));
+			data->drawModel(MODEL_STOP_SIGN, data->getTextureID(TEX_STOP_SIGN), position + glm::vec3(TILE_SIZE*j, 0.5,-k*TILE_SIZE), rotation, scale, angle);
 			break;
 		default:
 			break;
@@ -195,5 +241,15 @@ bool cScene::illegalMov() {
 }
 
 bool cScene::correctStep(int i) {
-	return i == 5; // TODO: improve this
+	return i == 5 || i == 2 || i == 3 || i == 8; // TODO: improve this
+}
+
+bool cScene::swapTile() {
+	if (map[(int)playerx][-(int)playerz] == 4 ||
+		map[(int)playerx +1][-(int)playerz] == 4 ||
+		map[(int)playerx][-(int)playerz +1] == 4 ||
+		map[(int)playerx +1][-(int)playerz +1] == 4) {
+		return true;
+	}
+	return false;
 }
