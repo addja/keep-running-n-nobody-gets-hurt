@@ -95,6 +95,18 @@ void cScene::render() {
 			}
 		}
 	}
+
+
+	if (DEBUG_MODE) {
+		drawHighlightTile((int)playerx,-(int)playerz);
+		drawHighlightTile((int)playerx +1,-(int)playerz);
+		drawHighlightTile((int)playerx,-(int)playerz +1);
+		drawHighlightTile((int)playerx +1,-(int)playerz +1);
+	}
+}
+
+void cScene::drawHighlightTile(int j, int k) {
+	drawColumn(j, k, 0, data->getTextureID(TEX_STONE));
 }
 
 void cScene::drawTile(int j, int k) {
@@ -173,5 +185,15 @@ bool cScene::illegalMov() {
 					playerz > 0 || playerz <= -map_width+1) {
 		return true;
 	}
+	if (correctStep(map[(int)playerx][-(int)playerz]) ||
+		correctStep(map[(int)playerx +1][-(int)playerz]) ||
+		correctStep(map[(int)playerx][-(int)playerz +1]) ||
+		correctStep(map[(int)playerx +1][-(int)playerz +1])) {
+		return true;
+	}
 	return false;
+}
+
+bool cScene::correctStep(int i) {
+	return i == 5; // TODO: improve this
 }

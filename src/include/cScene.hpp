@@ -15,6 +15,7 @@ class cScene : cEntity {
 		void update(float dt);
 		void render();
 
+		void drawHighlightTile(int j, int k);
 		void drawTile(int j, int k);
 		void drawLittleBlock(int j, int k, int n, glm::vec3 s, GLuint texture);
 		void drawColumn(int j, int k, int n, GLuint texture);
@@ -29,6 +30,7 @@ class cScene : cEntity {
 		bool illegalMov();
 		bool itemCollected();
 		bool playerHit();
+		bool correctStep(int i);
 
 	private:
 		std::vector< std::vector<int> > map;
