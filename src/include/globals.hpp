@@ -32,10 +32,10 @@
 #define TEX_CHAR		3
 #define TEX_COL			4
 #define TEX_GRASSIE 	5
+#define TEX_TITLE_PATH	"assets/title.png"
 #define TEX_SOIL_PATH	"assets/soil.jpg"
 #define TEX_STONE_PATH	"assets/stone.jpg"
 #define TEX_GRASS_PATH	"assets/grass.png"
-#define TEX_CHAR_PATH 	"assets/tex_char.jpg"
 #define TEX_COL_PATH 	"assets/column.jpg"
 #define TEX_GRASSIE_PATH 	"assets/grass.png"
 

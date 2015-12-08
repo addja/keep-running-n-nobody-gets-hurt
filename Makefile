@@ -4,7 +4,7 @@ CFLAGS=-Wall
 SFMLFLAGS=-lsfml-graphics -lsfml-window -lsfml-system
 LDFLAGS=-lGL -lGLEW
 
-OBJ =cGraphics.o cTexture.o cData.o cModel.o cEntity.o cPlayer.o cScene.o main.o cGame.o 
+OBJ =cMenu.o cGraphics.o cTexture.o cData.o cModel.o cEntity.o cPlayer.o cScene.o main.o cGame.o 
 
 all: main
 
@@ -13,6 +13,9 @@ main: $(OBJ)
 			
 main.o: src/main.cpp
 		$(CC) $(CFLAGS) -c src/main.cpp
+
+cMenu.o: src/cMenu.cpp
+		$(CC) $(CFLAGS) -c src/cMenu.cpp
 
 cGame.o: src/cGame.cpp
 		$(CC) $(CFLAGS) -c src/cGame.cpp

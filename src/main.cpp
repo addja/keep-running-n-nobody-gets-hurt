@@ -2,11 +2,10 @@
 
 #include "include/globals.hpp"
 #include "include/cGame.hpp"
+#include "include/cMenu.hpp"
 
 int main() {
 	// create window and initialize it
-    // sf::RenderWindow window(sf::VideoMode(WNDW_WIDTH, WNDW_HEIGHT), GAME_TITLE);
-
     sf::ContextSettings Settings;
 	Settings.depthBits         = 24; // Request a 24 bits depth buffer
 	Settings.stencilBits       = 8;  // Request a 8 bits stencil buffer
@@ -18,9 +17,15 @@ int main() {
 	sf::Clock clock;
 	sf::Time elapsed;
 
+	// create menu
+	cMenu menu = cMenu();
+	menu.render();
+	window.display();
+
 	// create game
 	cGame game = cGame();
-	
+
+
 	// game loop
     while (window.isOpen()) {
 
