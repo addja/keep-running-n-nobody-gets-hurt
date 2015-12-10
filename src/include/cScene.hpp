@@ -3,6 +3,7 @@
 #include "globals.hpp"
 #include "cEntity.hpp"
 
+#define OBJECT_ROTATION 0.1
 
 class cScene : cEntity {
 
@@ -17,6 +18,7 @@ class cScene : cEntity {
 
 		void drawHighlightTile(int j, int k);
 		void drawTile(int j, int k);
+		void drawObject(int j, int k);
 		void drawLittleBlock(int j, int k, int n, glm::vec3 s, GLuint texture);
 		void drawColumn(int j, int k, int n, GLuint texture);
 
@@ -28,13 +30,15 @@ class cScene : cEntity {
 		int getTile(glm::vec3 position);
 
 		bool illegalMov();
-		bool itemCollected();
+		int itemCollected();
 		bool playerHit();
 		bool correctStep(int i);
 		bool swapTile();
 
 	private:
 		std::vector< std::vector<int> > map;
+		std::vector< std::vector<int> > objmap;
 		int map_width, map_height;
 		float playerx, playerz;
+		float rot;
 };

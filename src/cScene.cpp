@@ -46,6 +46,10 @@ void cScene::loadLevel(int id) {
 		res = fscanf(file, "%s", lineHeader);
 	}
 
+	// TODO modify the map reader
+	std::vector< std::vector<int> > objmap(map.size(), std::vector<int>(map[0].size(),0));
+	objmap[10][10] = 1;
+	
 //	std::cout << std::endl;
 //	for (int i = 0; i < (int)map.size(); i++) {
 //		for (int j = 0; j < (int)map[i].size(); j++) {
@@ -57,6 +61,8 @@ void cScene::loadLevel(int id) {
 }
 
 void cScene::update(float dt) {
+	rot += dt*OBJECT_ROTATION;
+  	if (rot > 2*PI) rot -= 2*PI;
 	// A dream: destroying the map
 }
 
@@ -96,6 +102,40 @@ void cScene::render() {
 		}
 	}
 
+	//draw objects
+	if (data->front == 1) {
+		for (int i = 0; i < (int)objmap.size(); i++) {
+			int k = (int)objmap.size() - 1 - i;
+			for (int j = 0; j <= i; j++) {
+				if (objmap[j][k] != 0) drawObject(j, k);
+				k++;
+			}
+		}
+
+		for (int i = 1; i < (int)objmap.size(); i++) {
+			int k = 0;
+			for (int j = i; j < (int)objmap.size(); j++) {
+				if (objmap[j][k] != 0) drawObject(j, k);
+				k++;
+			}
+		}
+	} else {
+		for (int i = 0; i < (int)objmap.size(); i++) {
+			int j = (int)objmap.size() - 1;
+			for (int k = i; k >= 0; k--) {
+				if (objmap[j][k] != 0) drawObject(j, k);
+				j--;
+			}
+		}
+
+		for (int i = 1; i < (int)objmap.size(); i++) {
+			int k = (int)objmap.size() - 1;
+			for (int j = (int)objmap.size() - 1 - i; j >= 0; j--) {
+				if (objmap[j][k] != 0) drawObject(j, k);
+				k--;
+			}
+		}
+	}
 
 	if (DEBUG_MODE) {
 		drawHighlightTile((int)playerx,-(int)playerz);
@@ -252,4 +292,41 @@ bool cScene::swapTile() {
 		return true;
 	}
 	return false;
+}
+
+int cScene::itemCollected() {
+	int x = objmap[(int)playerx][-(int)playerz];
+	if (x != 0) {
+		objmap[(int)playerx][-(int)playerz] = 0;	
+		return x;
+	}
+	x = objmap[(int)playerx +1][-(int)playerz];
+	if (x != 0) {
+			objmap[(int)playerx +1][-(int)playerz] = 0;
+			return x;
+	}
+	x = objmap[(int)playerx][-(int)playerz +1];
+	if (x != 0) {
+			objmap[(int)playerx][-(int)playerz +1] = 0;
+			return x;
+	}
+	x = objmap[(int)playerx +1][-(int)playerz +1];
+	if (x != 0) {
+			objmap[(int)playerx +1][-(int)playerz +1] = 0;
+			return x;
+	}
+	return 0;
+}
+
+void cScene::drawObject(int j, int k) {
+	switch (objmap[j][k]) {
+		case 1: // coin
+			data->drawModel(MODEL_COIN, data->getTextureID(TEX_GRASS), position + glm::vec3(TILE_SIZE*j,0.5,-k*TILE_SIZE), rotation, scale * glm::vec3(1, 0.5, 1), angle+rot);
+			break;
+		case 2: // clock
+
+			break;
+		default:
+			break;
+	}
 }

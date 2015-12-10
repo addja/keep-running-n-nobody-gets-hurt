@@ -10,7 +10,7 @@ cGame::cGame() {
 	player.setActualModel(MODEL_CHAR1);
 	player.setDelay(0);
 	scene = cScene(glm::vec3(0,0,0), glm::vec3(0,1,0), glm::vec3(1), 0, &data);
-	scene.loadLevel(1);
+	scene.loadLevel(0);
 	scene.setPlayerPosition(glm::vec3(2,1,0));
 }
 
@@ -26,9 +26,9 @@ void cGame::update(float dt) {
 	if (scene.illegalMov()) {
 		player.setPosition(tmp);
 	}
-//	else if (scene.itemCollected()) {
-//		TODO
-//	}
+	else if (scene.itemCollected()) {
+		std::cout << "item collected!\n";
+	}
 //	else if (scene.playerHit()) {
 //		TODO
 //	}
@@ -54,7 +54,8 @@ void cGame::update(float dt) {
 	}
 
 	data.cameraP = player.getPosition();
-	// scene.update();
+	
+	scene.update(dt);
 }
 
 void cGame::render() {
@@ -196,5 +197,7 @@ void cGame::initGame() {
 	data.loadModel(MODEL_STONE4,MODEL_STONE4_PATH);
 	data.loadModel(MODEL_STONE5,MODEL_STONE5_PATH);
 	data.loadModel(MODEL_STOP_SIGN,MODEL_STOP_SIGN_PATH);
+	data.loadModel(MODEL_COIN,MODEL_COIN_PATH);
+	data.loadModel(MODEL_CLOCK,MODEL_CLOCK_PATH);
 }
 
