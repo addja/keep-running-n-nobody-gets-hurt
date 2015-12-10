@@ -3,7 +3,7 @@
 #include "globals.hpp"
 #include "cEntity.hpp"
 
-#define OBJECT_ROTATION 0.1
+#define OBJECT_ROTATION 0.7
 
 class cScene : cEntity {
 

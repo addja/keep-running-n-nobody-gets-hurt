@@ -4,7 +4,7 @@
 #include "cEntity.hpp"
 
 #define PLAYER_STEP 0.3f
-#define ANIMATION_DELAY	8
+#define ANIMATION_DELAY	1
 
 class cPlayer : cEntity {
 

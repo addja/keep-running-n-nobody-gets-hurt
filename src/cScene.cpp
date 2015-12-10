@@ -47,8 +47,11 @@ void cScene::loadLevel(int id) {
 	}
 
 	// TODO modify the map reader
-	std::vector< std::vector<int> > objmap(map.size(), std::vector<int>(map[0].size(),0));
+	objmap = std::vector< std::vector<int> >(map.size(), std::vector<int>(map[0].size(),0));
 	objmap[10][10] = 1;
+	objmap[20][20] = 2;
+
+	rot = 0;
 	
 //	std::cout << std::endl;
 //	for (int i = 0; i < (int)map.size(); i++) {
@@ -321,10 +324,10 @@ int cScene::itemCollected() {
 void cScene::drawObject(int j, int k) {
 	switch (objmap[j][k]) {
 		case 1: // coin
-			data->drawModel(MODEL_COIN, data->getTextureID(TEX_GRASS), position + glm::vec3(TILE_SIZE*j,0.5,-k*TILE_SIZE), rotation, scale * glm::vec3(1, 0.5, 1), angle+rot);
+			data->drawModel(MODEL_COIN, data->getTextureID(TEX_COIN), position + glm::vec3(TILE_SIZE*j,2.5,-k*TILE_SIZE), rotation, scale, angle+rot);
 			break;
 		case 2: // clock
-
+			data->drawModel(MODEL_CLOCK, data->getTextureID(TEX_CLOCK), position + glm::vec3(TILE_SIZE*j,2.5,-k*TILE_SIZE), rotation, scale, angle+rot);
 			break;
 		default:
 			break;

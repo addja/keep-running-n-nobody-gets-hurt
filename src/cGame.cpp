@@ -172,6 +172,8 @@ void cGame::initGame() {
 	data.loadTexture(TEX_STONE4,TEX_STONE4_PATH);
 	data.loadTexture(TEX_STONE5,TEX_STONE5_PATH);
 	data.loadTexture(TEX_STOP_SIGN,TEX_STOP_SIGN_PATH);
+	data.loadTexture(TEX_COIN,TEX_COIN_PATH);
+	data.loadTexture(TEX_CLOCK,TEX_CLOCK_PATH);
 	data.loadModel(MODEL_CHAR1,MODEL_CHAR1_PATH);
 	data.loadModel(MODEL_CHAR2,MODEL_CHAR2_PATH);
 	data.loadModel(MODEL_CHAR3,MODEL_CHAR3_PATH);

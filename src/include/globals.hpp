@@ -59,8 +59,8 @@
 #define TEX_STONE4_PATH 		"assets/stone4.jpg"
 #define TEX_STONE5_PATH 		"assets/stone5.jpg"
 #define TEX_STOP_SIGN_PATH 		"assets/metal.jpg"
-#define TEX_COIN_PATH 		"assets/coin-texture.jpg"
-#define TEX_CLOCK_PATH 		"assets/clock.jpg"
+#define TEX_COIN_PATH 			"assets/coin-texture.jpg"
+#define TEX_CLOCK_PATH 			"assets/clock.jpg"
 
 #define N_MODELS			27
 #define MODEL_CHAR1			0

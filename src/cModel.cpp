@@ -30,6 +30,7 @@ void cModel::loadModel(std::string filename) {
 	}
 
 	char lineHeader[128];
+	fpos_t position;
 	// read the first word of the line
 	int res = fscanf(file, "%s", lineHeader);
 	while(1) {	 
@@ -48,15 +49,26 @@ void cModel::loadModel(std::string filename) {
 			fscanf(file, "%f %f %f\n", &normal.x, &normal.y, &normal.z );
 			temp_normals.push_back(normal);
 		} else if ( lineHeader == std::string("f") ) {
+			fgetpos(file, &position);
+
 			std::string vertex1, vertex2, vertex3;
 			unsigned int vertexIndex[4], uvIndex[4], normalIndex[4];
 			int matches = fscanf(file, "%d/%d/%d %d/%d/%d %d/%d/%d %d/%d/%d\n", &vertexIndex[0], &uvIndex[0], &normalIndex[0], &vertexIndex[1], &uvIndex[1], &normalIndex[1], &vertexIndex[2], &uvIndex[2], &normalIndex[2], &vertexIndex[3], &uvIndex[3], &normalIndex[3] );
 
-			if (matches != 12 && matches != 9) {
+			if (matches == 1) {
+				fsetpos(file, &position);
+				matches = fscanf(file, "%d//%d %d//%d %d//%d %d//%d\n", &vertexIndex[0], &normalIndex[0], &vertexIndex[1], &normalIndex[1], &vertexIndex[2], &normalIndex[2], &vertexIndex[3], &normalIndex[3] );
+				uvIndex[0] = 1;
+				uvIndex[1] = 1;
+				uvIndex[2] = 1;
+				uvIndex[3] = 1;
+			}
+
+			if (matches != 12 && matches != 9 && matches != 8 && matches != 6) {
 			    printf("File can't be read by our simple parser : ( Try exporting with other options, %d\n", matches);
 			    return;
 			}
-			if (matches == 12) {
+			if (matches == 12 || matches == 8) {
 				vertexIndices.push_back(vertexIndex[0]);
 				vertexIndices.push_back(vertexIndex[1]);
 				vertexIndices.push_back(vertexIndex[2]);
