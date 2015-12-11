@@ -10,52 +10,66 @@ cGame::cGame() {
 	player.setActualModel(MODEL_CHAR1);
 	player.setDelay(0);
 	scene = cScene(glm::vec3(0,0,0), glm::vec3(0,1,0), glm::vec3(1), 0, &data);
-	scene.loadLevel(0);
+	scene.loadLevel(1);
 	scene.setPlayerPosition(glm::vec3(2,1,0));
+	swap_tile = false;
 }
 
 cGame::~cGame() {
 }
 
 void cGame::update(float dt) {
-	glm::vec3 tmp;
-	tmp = player.getPosition();
-	player.update(dt);
-	scene.updatePlayerPosition(player.getPosition());
+	if (swap_tile) {
+		if (data.rotating_angle >= PI + PI/4) {
+			if (data.front == 1) data.front = -1;
+			else data.front = 1;
 
-	if (scene.illegalMov()) {
-		player.setPosition(tmp);
-	}
-	else if (scene.itemCollected()) {
-		std::cout << "item collected!\n";
-	}
-//	else if (scene.playerHit()) {
-//		TODO
-//	}
- 	else if (scene.swapTile()) {
-		if (data.front == 1) data.front = -1;
-		else data.front = 1;
-
-		player.moveForward();
-		player.moveForward();
-		player.moveForward();
-		player.moveForward();
-		player.moveForward();
-		player.moveForward();
-		player.moveForward();
-		player.moveForward();
-		player.moveForward();
-		player.moveForward();
-		player.moveForward();
-		player.moveForward();
-		player.moveForward();
-		player.moveForward();
-		scene.updatePlayerPosition(player.getPosition());
-	}
-
-	data.cameraP = player.getPosition();
+			player.moveForward();
+			player.moveForward();
+			player.moveForward();
+			player.moveForward();
+			player.moveForward();
+			player.moveForward();
+			player.moveForward();
+			player.moveForward();
+			player.moveForward();
+			player.moveForward();
+			player.moveForward();
+			player.moveForward();
+			player.moveForward();
+			player.moveForward();
+			scene.updatePlayerPosition(player.getPosition());
+			swap_tile = 0;
+			data.rotating_angle = PI/4;
+		} else {
+			data.rotating_angle += 0.02;
+			data.cameraP = player.getPosition();
 	
-	scene.update(dt);
+			scene.update(dt);
+		}
+	} else {
+		glm::vec3 tmp;
+		tmp = player.getPosition();
+		player.update(dt);
+		scene.updatePlayerPosition(player.getPosition());
+
+		if (scene.illegalMov()) {
+			player.setPosition(tmp);
+		}
+		else if (scene.itemCollected()) {
+			std::cout << "item collected!\n";
+		}
+//		else if (scene.playerHit()) {
+//			TODO
+//		}
+ 		else if (scene.swapTile()) {
+			swap_tile = true;
+		}
+
+		data.cameraP = player.getPosition();
+	
+		scene.update(dt);
+	}
 }
 
 void cGame::render() {
@@ -172,6 +186,7 @@ void cGame::initGame() {
 	data.loadTexture(TEX_STONE4,TEX_STONE4_PATH);
 	data.loadTexture(TEX_STONE5,TEX_STONE5_PATH);
 	data.loadTexture(TEX_STOP_SIGN,TEX_STOP_SIGN_PATH);
+	data.loadTexture(TEX_METAL,TEX_METAL_PATH);
 	data.loadTexture(TEX_COIN,TEX_COIN_PATH);
 	data.loadTexture(TEX_CLOCK,TEX_CLOCK_PATH);
 	data.loadModel(MODEL_CHAR1,MODEL_CHAR1_PATH);
@@ -199,6 +214,7 @@ void cGame::initGame() {
 	data.loadModel(MODEL_STONE4,MODEL_STONE4_PATH);
 	data.loadModel(MODEL_STONE5,MODEL_STONE5_PATH);
 	data.loadModel(MODEL_STOP_SIGN,MODEL_STOP_SIGN_PATH);
+	data.loadModel(MODEL_STOP_BODY,MODEL_STOP_BODY_PATH);
 	data.loadModel(MODEL_COIN,MODEL_COIN_PATH);
 	data.loadModel(MODEL_CLOCK,MODEL_CLOCK_PATH);
 }

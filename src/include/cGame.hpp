@@ -19,6 +19,9 @@ class cGame {
 		cData data;
 		cScene scene;
 		cPlayer player;
+		bool swap_tile;
+		bool win;
+		bool death;
 		
 		void initOpenGL();
 		void initGame();

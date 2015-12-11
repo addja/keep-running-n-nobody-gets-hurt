@@ -174,15 +174,15 @@ void cModel::initGL() {
 	calcBBox();
 }
 
-void cModel::render(GLuint texture, glm::vec3 p, glm::vec3 r, glm::vec3 s, float angle, glm::vec3 cameraP, int front) {
+void cModel::render(GLuint texture, glm::vec3 p, glm::vec3 r, glm::vec3 s, float angle, glm::vec3 cameraP, int front, float rot) {
 
 	// Projection matrix : 45° Field of View, 4:3 ratio, display range : 0.1 unit <-> 100 units
 	 glm::mat4 Projection = glm::perspective(glm::radians(45.0f), (float) WNDW_WIDTH / (float)WNDW_HEIGHT, 0.1f, 1.0f);
 	
 	// Or, for an ortho camera :
 	//glm::mat4 Projection = glm::ortho(-10.0f,10.0f,-10.0f,10.0f,0.0f,100.0f); // In world coordinates
-	
-	glm::vec3 cameraPos = cameraP + glm::vec3(front, 1, front) * glm::vec3(25,25,25);
+	float v = 25/sin(PI/4);
+	glm::vec3 cameraPos = cameraP + glm::vec3(v*cos(rot) - 25,0,v*sin(rot) - 25) + glm::vec3(front, 1, front) * glm::vec3(25,25,25);
 
 	// Camera matrix
 	glm::mat4 View = glm::lookAt(

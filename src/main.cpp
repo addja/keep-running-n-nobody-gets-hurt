@@ -74,7 +74,7 @@ int main() {
         }
 		
 		elapsed = clock.getElapsedTime();
-		if (elapsed.asSeconds() > 1.0/60) { // 60 fps = 1.0/60
+		if (elapsed.asSeconds() > 0) { // 60 fps = 1.0/60
 			window.setActive();
 			game.update(clock.restart().asSeconds());
 			game.render();

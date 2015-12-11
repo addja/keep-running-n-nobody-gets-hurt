@@ -230,6 +230,7 @@ void cScene::drawTile(int j, int k) {
 		case 16: // Stop sign
 			drawColumn(j, k, 0, data->getTextureID(TEX_SOIL));
 			data->drawModel(MODEL_STOP_SIGN, data->getTextureID(TEX_STOP_SIGN), position + glm::vec3(TILE_SIZE*j, 0.5,-k*TILE_SIZE), rotation, scale, angle);
+			data->drawModel(MODEL_STOP_BODY, data->getTextureID(TEX_METAL), position + glm::vec3(TILE_SIZE*j, 0.5,-k*TILE_SIZE), rotation, scale, angle);
 			break;
 		default:
 			break;

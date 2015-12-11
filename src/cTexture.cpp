@@ -14,7 +14,7 @@ GLuint loadTex(std::string filename) {
 	glBindTexture(GL_TEXTURE_2D, texture_handle);
 
 	glTexImage2D(
-					GL_TEXTURE_2D, 0, GL_RGBA8,
+					GL_TEXTURE_2D, 0, GL_RGB,
 					img_data.getSize().x, img_data.getSize().y,
 					0,
 					GL_RGBA, 

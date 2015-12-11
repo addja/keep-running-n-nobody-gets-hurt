@@ -9,6 +9,7 @@ class cData {
 	public:
 		glm::vec3 cameraP;
 		int front;
+		float rotating_angle;
 
 		cData();
 		~cData();
