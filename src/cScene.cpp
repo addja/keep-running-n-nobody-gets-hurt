@@ -9,6 +9,7 @@ cScene::~cScene() {}
 
 void cScene::loadLevel(int id) {
 	char filename[30];
+	// Level
 	sprintf(filename, "assets/level%d.txt", id);
 
 	FILE * file = fopen(filename, "r");
@@ -31,6 +32,7 @@ void cScene::loadLevel(int id) {
 			v = std::vector<int>(map_width);
 		} else if ( lineHeader == std::string("h") ) {
 			fscanf(file, "%d\n", &map_height );
+			map = std::vector< std::vector<int> >();
 		} else if ( lineHeader == std::string("m") ) {
 			int tile;
 			while (i < map_width - 1) {
@@ -46,27 +48,68 @@ void cScene::loadLevel(int id) {
 		res = fscanf(file, "%s", lineHeader);
 	}
 
+	
+
 	// TODO modify the map reader
 	objmap = std::vector< std::vector<int> >(map.size(), std::vector<int>(map[0].size(),0));
 	objmap[10][10] = 1;
 	objmap[20][20] = 2;
 
 	rot = 0;
-	
-//	std::cout << std::endl;
-//	for (int i = 0; i < (int)map.size(); i++) {
-//		for (int j = 0; j < (int)map[i].size(); j++) {
-//			std::cout << map[i][j] << " ";
-//		}
-//		std::cout << std::endl;
-//	}
-//	std::cout << std::endl;
+}
+
+void cScene::loadLevelCooldowns(int id) {
+	char filename[30];
+	// Level cooldowns
+	sprintf(filename, "assets/level%dcds.txt", id);
+
+	FILE * file = fopen(filename, "r");
+	std::cout << filename << std::endl;
+	if( file == NULL ) {
+		std::cout << "Impossible to open the level file!" << std::endl;
+		return;
+	}
+
+	std::vector<float> v2;
+	int i = 0;
+	// read the first word of the line
+	char lineHeader[128];
+	int res = fscanf(file, "%s", lineHeader);
+	while(1) {	 
+		if (res == EOF) {
+			break; // EOF = End Of File. Quit the loop.
+		} else if ( lineHeader == std::string("w") ) {
+			fscanf(file, "%d\n", &map_width );
+			v2 = std::vector<float>(map_width);
+		} else if ( lineHeader == std::string("h") ) {
+			fscanf(file, "%d\n", &map_height );
+			map_cds = std::vector< std::vector<float> >();
+		} else if ( lineHeader == std::string("m") ) {
+			float tile;
+			while (i < map_width - 1) {
+				int match = fscanf(file, "%f, ", &tile );
+				if (match != 1) std::cout << "PROBLEM: " << i << std::endl;
+				v2[i] = tile;
+				i++;
+			}
+			fscanf(file, "%f\n", &tile );
+			v2[i] = tile;
+			map_cds.push_back(v2);
+			i = 0;
+		}
+		res = fscanf(file, "%s", lineHeader);
+	}
 }
 
 void cScene::update(float dt) {
 	rot += dt*OBJECT_ROTATION;
   	if (rot > 2*PI) rot -= 2*PI;
 	// A dream: destroying the map
+	for (int i = 0; i < (int)map_cds.size(); i++) {
+		for (int j = 0; j < (int)map_cds[0].size(); j++) {
+			map_cds[i][j] -= CD_REDUCTION;
+		}
+	}
 }
 
 void cScene::render() {
@@ -153,6 +196,8 @@ void cScene::drawHighlightTile(int j, int k) {
 }
 
 void cScene::drawTile(int j, int k) {
+	float new_y = 0;
+	if (map_cds[j][k] < 0) new_y = map_cds[j][k];
 	switch (map[j][k]) {
 		case 0: break; // Empty block
 		case 1: // Soil
@@ -181,56 +226,56 @@ void cScene::drawTile(int j, int k) {
 			break;
 		case 7: // New grass
 			drawColumn(j, k, 0, data->getTextureID(TEX_SOIL));
-			if (data->front == 1) data->drawModel(MODEL_GRASSIE, data->getTextureID(TEX_GRASS), position + glm::vec3(TILE_SIZE*j,0,-k*TILE_SIZE), rotation, scale, angle);
-			else data->drawModel(MODEL_GRASSIE, data->getTextureID(TEX_GRASS), position + glm::vec3(TILE_SIZE*j,0,-k*TILE_SIZE), rotation, scale, angle + PI);
+			if (data->front == 1) data->drawModel(MODEL_GRASSIE, data->getTextureID(TEX_GRASS), position + glm::vec3(TILE_SIZE*j,new_y,-k*TILE_SIZE), rotation, scale, angle);
+			else data->drawModel(MODEL_GRASSIE, data->getTextureID(TEX_GRASS), position + glm::vec3(TILE_SIZE*j,new_y,-k*TILE_SIZE), rotation, scale, angle + PI);
 			break;
 		case 8: // High columns
-			data->drawModel(MODEL_COL, data->getTextureID(TEX_COL), position + glm::vec3(TILE_SIZE*j,-0.5,-k*TILE_SIZE), rotation, scale, angle);
+			data->drawModel(MODEL_COL, data->getTextureID(TEX_COL), position + glm::vec3(TILE_SIZE*j,new_y-0.5,-k*TILE_SIZE), rotation, scale, angle);
 			break;
 		case 9: // Normal tree
 			drawColumn(j, k, 0, data->getTextureID(TEX_SOIL));
 			if (data->front == 1) {
-				data->drawModel(MODEL_TREE_BODY, data->getTextureID(TEX_TREE_BODY), position + glm::vec3(TILE_SIZE*j, 0.5,-k*TILE_SIZE), rotation, scale, angle);
-				data->drawModel(MODEL_TREE_LEAVES, data->getTextureID(TEX_TREE_LEAVES), position + glm::vec3(TILE_SIZE*j, 0.5,-k*TILE_SIZE), rotation, scale, angle);
+				data->drawModel(MODEL_TREE_BODY, data->getTextureID(TEX_TREE_BODY), position + glm::vec3(TILE_SIZE*j, new_y+0.5,-k*TILE_SIZE), rotation, scale, angle);
+				data->drawModel(MODEL_TREE_LEAVES, data->getTextureID(TEX_TREE_LEAVES), position + glm::vec3(TILE_SIZE*j, new_y+0.5,-k*TILE_SIZE), rotation, scale, angle);
 			} else {
-				data->drawModel(MODEL_TREE_BODY, data->getTextureID(TEX_TREE_BODY), position + glm::vec3(TILE_SIZE*j, 0.5,-k*TILE_SIZE), rotation, scale, angle + PI);
-				data->drawModel(MODEL_TREE_LEAVES, data->getTextureID(TEX_TREE_LEAVES), position + glm::vec3(TILE_SIZE*j, 0.5,-k*TILE_SIZE), rotation, scale, angle + PI);
+				data->drawModel(MODEL_TREE_BODY, data->getTextureID(TEX_TREE_BODY), position + glm::vec3(TILE_SIZE*j, new_y+0.5,-k*TILE_SIZE), rotation, scale, angle + PI);
+				data->drawModel(MODEL_TREE_LEAVES, data->getTextureID(TEX_TREE_LEAVES), position + glm::vec3(TILE_SIZE*j, new_y+0.5,-k*TILE_SIZE), rotation, scale, angle + PI);
 			}
 			break;
 		case 10: // Autumn tree
 			drawColumn(j, k, 0, data->getTextureID(TEX_SOIL));
 			if (data->front == 1) {
-				data->drawModel(MODEL_AUTUMN_BODY, data->getTextureID(TEX_TREE_BODY), position + glm::vec3(TILE_SIZE*j, 0.5,-k*TILE_SIZE), rotation, scale, angle);
-				data->drawModel(MODEL_AUTUMN_LEAVES, data->getTextureID(TEX_AUTUMN_LEAVES), position + glm::vec3(TILE_SIZE*j, 0.5,-k*TILE_SIZE), rotation, scale, angle);
+				data->drawModel(MODEL_AUTUMN_BODY, data->getTextureID(TEX_TREE_BODY), position + glm::vec3(TILE_SIZE*j, new_y+0.5,-k*TILE_SIZE), rotation, scale, angle);
+				data->drawModel(MODEL_AUTUMN_LEAVES, data->getTextureID(TEX_AUTUMN_LEAVES), position + glm::vec3(TILE_SIZE*j, new_y+0.5,-k*TILE_SIZE), rotation, scale, angle);
 			} else {
-				data->drawModel(MODEL_AUTUMN_BODY, data->getTextureID(TEX_TREE_BODY), position + glm::vec3(TILE_SIZE*j, 0.5,-k*TILE_SIZE), rotation, scale, angle + PI);
-				data->drawModel(MODEL_AUTUMN_LEAVES, data->getTextureID(TEX_AUTUMN_LEAVES), position + glm::vec3(TILE_SIZE*j, 0.5,-k*TILE_SIZE), rotation, scale, angle + PI);
+				data->drawModel(MODEL_AUTUMN_BODY, data->getTextureID(TEX_TREE_BODY), position + glm::vec3(TILE_SIZE*j, new_y+0.5,-k*TILE_SIZE), rotation, scale, angle + PI);
+				data->drawModel(MODEL_AUTUMN_LEAVES, data->getTextureID(TEX_AUTUMN_LEAVES), position + glm::vec3(TILE_SIZE*j, new_y+0.5,-k*TILE_SIZE), rotation, scale, angle + PI);
 			}
 			break;
 		case 11: // Stone 1
 			drawColumn(j, k, 0, data->getTextureID(TEX_SOIL));
-			data->drawModel(MODEL_STONE1, data->getTextureID(TEX_STONE1), position + glm::vec3(TILE_SIZE*j, 0.5,-k*TILE_SIZE), rotation, scale, angle);
+			data->drawModel(MODEL_STONE1, data->getTextureID(TEX_STONE1), position + glm::vec3(TILE_SIZE*j, new_y+0.5,-k*TILE_SIZE), rotation, scale, angle);
 			break;
 		case 12: // Stone 2
 			drawColumn(j, k, 0, data->getTextureID(TEX_SOIL));
-			data->drawModel(MODEL_STONE2, data->getTextureID(TEX_STONE2), position + glm::vec3(TILE_SIZE*j, 0.5,-k*TILE_SIZE), rotation, scale, angle);
+			data->drawModel(MODEL_STONE2, data->getTextureID(TEX_STONE2), position + glm::vec3(TILE_SIZE*j, new_y+0.5,-k*TILE_SIZE), rotation, scale, angle);
 			break;
 		case 13: // Stone 3
 			drawColumn(j, k, 0, data->getTextureID(TEX_SOIL));
-			data->drawModel(MODEL_STONE3, data->getTextureID(TEX_STONE3), position + glm::vec3(TILE_SIZE*j, 0.5,-k*TILE_SIZE), rotation, scale, angle);
+			data->drawModel(MODEL_STONE3, data->getTextureID(TEX_STONE3), position + glm::vec3(TILE_SIZE*j, new_y+0.5,-k*TILE_SIZE), rotation, scale, angle);
 			break;
 		case 14: // Stone 4
 			drawColumn(j, k, 0, data->getTextureID(TEX_SOIL));
-			data->drawModel(MODEL_STONE4, data->getTextureID(TEX_STONE4), position + glm::vec3(TILE_SIZE*j, 0.5,-k*TILE_SIZE), rotation, scale, angle);
+			data->drawModel(MODEL_STONE4, data->getTextureID(TEX_STONE4), position + glm::vec3(TILE_SIZE*j, new_y+0.5,-k*TILE_SIZE), rotation, scale, angle);
 			break;
 		case 15: // Stone 5
 			drawColumn(j, k, 0, data->getTextureID(TEX_SOIL));
-			data->drawModel(MODEL_STONE5, data->getTextureID(TEX_STONE5), position + glm::vec3(TILE_SIZE*j, 0.5,-k*TILE_SIZE), rotation, scale, angle);
+			data->drawModel(MODEL_STONE5, data->getTextureID(TEX_STONE5), position + glm::vec3(TILE_SIZE*j, new_y+0.5,-k*TILE_SIZE), rotation, scale, angle);
 			break;
 		case 16: // Stop sign
 			drawColumn(j, k, 0, data->getTextureID(TEX_SOIL));
-			data->drawModel(MODEL_STOP_SIGN, data->getTextureID(TEX_STOP_SIGN), position + glm::vec3(TILE_SIZE*j, 0.5,-k*TILE_SIZE), rotation, scale, angle);
-			data->drawModel(MODEL_STOP_BODY, data->getTextureID(TEX_METAL), position + glm::vec3(TILE_SIZE*j, 0.5,-k*TILE_SIZE), rotation, scale, angle);
+			data->drawModel(MODEL_STOP_SIGN, data->getTextureID(TEX_STOP_SIGN), position + glm::vec3(TILE_SIZE*j, new_y+0.5,-k*TILE_SIZE), rotation, scale, angle);
+			data->drawModel(MODEL_STOP_BODY, data->getTextureID(TEX_METAL), position + glm::vec3(TILE_SIZE*j, new_y+0.5,-k*TILE_SIZE), rotation, scale, angle);
 			break;
 		default:
 			break;
@@ -238,12 +283,16 @@ void cScene::drawTile(int j, int k) {
 }
 
 void cScene::drawLittleBlock(int j, int k, int n, glm::vec3 s, GLuint texture) {
-	data->drawModel(MODEL_CUBE, texture, position + glm::vec3(j*TILE_SIZE, -0.5 + n,-k*TILE_SIZE), rotation, scale * s, angle);
+	float new_y = 0;
+	if (map_cds[j][k] < 0) new_y = map_cds[j][k];
+	data->drawModel(MODEL_CUBE, texture, position + glm::vec3(j*TILE_SIZE, new_y - 0.5 + n,-k*TILE_SIZE), rotation, scale * s, angle);
 }
 
 void cScene::drawColumn(int j, int k, int n, GLuint texture) {
+	float new_y = 0;
+	if (map_cds[j][k] < 0) new_y = map_cds[j][k];
 	for (int i = 0; i <= n; i++){
-		data->drawModel(MODEL_CUBE, texture, position + glm::vec3(TILE_SIZE*j,-0.5 + i,-k*TILE_SIZE), rotation, scale, angle);
+		data->drawModel(MODEL_CUBE, texture, position + glm::vec3(TILE_SIZE*j, new_y - 0.5 + i,-k*TILE_SIZE), rotation, scale, angle);
 	}
 }
 
@@ -253,8 +302,8 @@ void cScene::updatePlayerPosition(glm::vec3 dp) {
 }
 
 void cScene::setPlayerPosition(glm::vec3 p) {
-	playerx = p.x;
-	playerz = p.z;
+	playerx = p.x/TILE_SIZE;
+	playerz = p.z/TILE_SIZE;
 }
 
 int cScene::getWidth() {
@@ -285,7 +334,7 @@ bool cScene::illegalMov() {
 }
 
 bool cScene::correctStep(int i) {
-	return i == 5 || i == 2 || i == 3 || i == 8; // TODO: improve this
+	return i == 5 || i == 2 || i == 3 || i == 8 || i == 0; // TODO: improve this
 }
 
 bool cScene::swapTile() {
@@ -320,6 +369,16 @@ int cScene::itemCollected() {
 			return x;
 	}
 	return 0;
+}
+
+bool cScene::dead() {
+	if ((map[(int)playerx][-(int)playerz] != 0 && map_cds[(int)playerx][-(int)playerz] < 0) ||
+		(map[(int)playerx +1][-(int)playerz] != 0 && map_cds[(int)playerx +1][-(int)playerz] < 0) ||
+		(map[(int)playerx][-(int)playerz +1] != 0 && map_cds[(int)playerx][-(int)playerz +1] < 0) ||
+		(map[(int)playerx +1][-(int)playerz +1] != 0 && map_cds[(int)playerx +1][-(int)playerz +1] < 0)) {
+		return true;
+	}
+	return false;
 }
 
 void cScene::drawObject(int j, int k) {

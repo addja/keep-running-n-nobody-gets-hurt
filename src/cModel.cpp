@@ -182,7 +182,9 @@ void cModel::render(GLuint texture, glm::vec3 p, glm::vec3 r, glm::vec3 s, float
 	// Or, for an ortho camera :
 	//glm::mat4 Projection = glm::ortho(-10.0f,10.0f,-10.0f,10.0f,0.0f,100.0f); // In world coordinates
 	float v = 25/sin(PI/4);
-	glm::vec3 cameraPos = cameraP + glm::vec3(v*cos(rot) - 25,0,v*sin(rot) - 25) + glm::vec3(front, 1, front) * glm::vec3(25,25,25);
+	glm::vec3 cameraPos;
+	if (front == 1) cameraPos = cameraP + glm::vec3(v*sin(rot) - 25,0,v*cos(rot) - 25) + glm::vec3(front, 1, front) * glm::vec3(25,25,25);
+	else cameraPos = cameraP - glm::vec3(v*cos(rot) - 25,0,v*sin(rot) - 25) + glm::vec3(front, 1, front) * glm::vec3(25,25,25);
 
 	// Camera matrix
 	glm::mat4 View = glm::lookAt(

@@ -13,7 +13,7 @@ class cGame {
 	
 		void keyPressed(char c);
 		void update(float dt);
-		void render();		
+		void render();	
 
 	private:
 		cData data;
@@ -22,7 +22,9 @@ class cGame {
 		bool swap_tile;
 		bool win;
 		bool death;
+		float limit;
 		
 		void initOpenGL();
 		void initGame();
+		void restartGame();
 };

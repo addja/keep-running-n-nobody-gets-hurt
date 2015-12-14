@@ -4,6 +4,7 @@
 #include "cEntity.hpp"
 
 #define OBJECT_ROTATION 0.9
+#define CD_REDUCTION 0.122
 
 class cScene : cEntity {
 
@@ -13,6 +14,7 @@ class cScene : cEntity {
 		~cScene();
 
 		void loadLevel(int id);
+		void loadLevelCooldowns(int id);
 		void update(float dt);
 		void render();
 
@@ -34,9 +36,11 @@ class cScene : cEntity {
 		bool playerHit();
 		bool correctStep(int i);
 		bool swapTile();
+		bool dead();
 
 	private:
 		std::vector< std::vector<int> > map;
+		std::vector< std::vector<float> > map_cds;
 		std::vector< std::vector<int> > objmap;
 		int map_width, map_height;
 		float playerx, playerz;

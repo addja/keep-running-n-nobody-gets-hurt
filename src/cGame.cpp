@@ -6,13 +6,15 @@ cGame::cGame() {
 	initOpenGL();
 	initGame();
 	// Scaled to 1, so we move it up 0.5 (half its bounding box) so it is above the y = 0, which is the ground
-	player = cPlayer(glm::vec3(2.0,0.5,-2.0), glm::vec3(0,1,0), glm::vec3(1), PI, &data);
+	player = cPlayer(glm::vec3(32.0,0.5,-2.0), glm::vec3(0,1,0), glm::vec3(1), PI, &data);
 	player.setActualModel(MODEL_CHAR1);
 	player.setDelay(0);
 	scene = cScene(glm::vec3(0,0,0), glm::vec3(0,1,0), glm::vec3(1), 0, &data);
 	scene.loadLevel(1);
-	scene.setPlayerPosition(glm::vec3(2,1,0));
+	scene.loadLevelCooldowns(1);
+	scene.setPlayerPosition(glm::vec3(32.0,0.5,-2.0));
 	swap_tile = false;
+	limit = (PI + PI/4)/13;
 }
 
 cGame::~cGame() {
@@ -24,28 +26,18 @@ void cGame::update(float dt) {
 			if (data.front == 1) data.front = -1;
 			else data.front = 1;
 
-			player.moveForward();
-			player.moveForward();
-			player.moveForward();
-			player.moveForward();
-			player.moveForward();
-			player.moveForward();
-			player.moveForward();
-			player.moveForward();
-			player.moveForward();
-			player.moveForward();
-			player.moveForward();
-			player.moveForward();
-			player.moveForward();
-			player.moveForward();
 			scene.updatePlayerPosition(player.getPosition());
 			swap_tile = 0;
 			data.rotating_angle = PI/4;
+			limit = (PI + PI/4)/13;
 		} else {
-			data.rotating_angle += 0.02;
-			data.cameraP = player.getPosition();
-	
-			scene.update(dt);
+			data.rotating_angle += 0.08;
+			if (data.rotating_angle >= limit) {
+				player.update(dt);
+				scene.updatePlayerPosition(player.getPosition());
+				data.cameraP = player.getPosition();
+				limit += (PI + PI/4)/13;
+			}
 		}
 	} else {
 		glm::vec3 tmp;
@@ -64,6 +56,12 @@ void cGame::update(float dt) {
 //		}
  		else if (scene.swapTile()) {
 			swap_tile = true;
+		}
+
+		if (scene.dead()) {
+			std::cout << "DEAD!\n";
+			restartGame();
+			return;
 		}
 
 		data.cameraP = player.getPosition();
@@ -89,21 +87,7 @@ void cGame::keyPressed(char c) {
 	glm::vec3 tmp;
 	switch (c) {
 		case 'W':
-			tmp = player.getPosition();
-			player.moveForward();
-			scene.updatePlayerPosition(player.getPosition());
-			if (scene.illegalMov()) {
-				player.setPosition(tmp);
-			}
-			//	else if (scene.itemCollected()) {
-			//		TODO
-			//	}
-			//	else if (scene.playerHit()) {
-			//		TODO
-			//	}
-			//  else if (scene.swapTile()) {
-			//		TODO
-			//	}
+			// DEPRECATED: NO MOVING FORWARD FOR OUR BOY.
 			break;
 		case 'S':
 			// DEPRECATED: NO MOVING DOWN FOR OUR BOY.
@@ -217,5 +201,18 @@ void cGame::initGame() {
 	data.loadModel(MODEL_STOP_BODY,MODEL_STOP_BODY_PATH);
 	data.loadModel(MODEL_COIN,MODEL_COIN_PATH);
 	data.loadModel(MODEL_CLOCK,MODEL_CLOCK_PATH);
+}
+
+void cGame::restartGame() {
+	player = cPlayer(glm::vec3(32.0,0.5,-2.0), glm::vec3(0,1,0), glm::vec3(1), PI, &data);
+	player.setActualModel(MODEL_CHAR1);
+	player.setDelay(0);
+	scene.loadLevelCooldowns(1);
+	scene.setPlayerPosition(glm::vec3(32.0,0.5,-2.0));
+	swap_tile = false;
+	limit = (PI + PI/4)/13;
+	data.front = 1;
+	data.rotating_angle = PI/4;
+	data.cameraP = player.getPosition();
 }
 
