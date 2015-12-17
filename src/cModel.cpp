@@ -33,27 +33,28 @@ void cModel::loadModel(std::string filename) {
 	fpos_t position;
 	// read the first word of the line
 	int res = fscanf(file, "%s", lineHeader);
-	while(1) {	 
+	while(1) {
+		int matches;
 		if (res == EOF) {
 			break; // EOF = End Of File. Quit the loop.
 		} else if ( lineHeader == std::string("v") ) {
 			glm::vec3 vertex;
-			fscanf(file, "%f %f %f\n", &vertex.x, &vertex.y, &vertex.z );
+			matches = fscanf(file, "%f %f %f\n", &vertex.x, &vertex.y, &vertex.z );
 			temp_vertices.push_back(vertex);
 		} else if( lineHeader == std::string("vt") ) {
 			glm::vec2 uv;
-			fscanf(file, "%f %f\n", &uv.x, &uv.y );
+			matches = fscanf(file, "%f %f\n", &uv.x, &uv.y );
 			temp_uvs.push_back(uv);
 		} else if ( lineHeader == std::string("vn") ) {
 			glm::vec3 normal;
-			fscanf(file, "%f %f %f\n", &normal.x, &normal.y, &normal.z );
+			matches = fscanf(file, "%f %f %f\n", &normal.x, &normal.y, &normal.z );
 			temp_normals.push_back(normal);
 		} else if ( lineHeader == std::string("f") ) {
 			fgetpos(file, &position);
 
 			std::string vertex1, vertex2, vertex3;
 			unsigned int vertexIndex[4], uvIndex[4], normalIndex[4];
-			int matches = fscanf(file, "%d/%d/%d %d/%d/%d %d/%d/%d %d/%d/%d\n", &vertexIndex[0], &uvIndex[0], &normalIndex[0], &vertexIndex[1], &uvIndex[1], &normalIndex[1], &vertexIndex[2], &uvIndex[2], &normalIndex[2], &vertexIndex[3], &uvIndex[3], &normalIndex[3] );
+			matches = fscanf(file, "%d/%d/%d %d/%d/%d %d/%d/%d %d/%d/%d\n", &vertexIndex[0], &uvIndex[0], &normalIndex[0], &vertexIndex[1], &uvIndex[1], &normalIndex[1], &vertexIndex[2], &uvIndex[2], &normalIndex[2], &vertexIndex[3], &uvIndex[3], &normalIndex[3] );
 
 			if (matches == 1) {
 				fsetpos(file, &position);

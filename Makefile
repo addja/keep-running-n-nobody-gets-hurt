@@ -1,6 +1,6 @@
 BIN=game
 CC=g++
-CFLAGS=-Wall
+CFLAGS=-Wall -O3
 SFMLFLAGS=-lsfml-graphics -lsfml-window -lsfml-system
 LDFLAGS=-lGL -lGLEW
 

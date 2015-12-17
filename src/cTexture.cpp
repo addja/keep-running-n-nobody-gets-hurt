@@ -14,7 +14,7 @@ GLuint loadTex(std::string filename) {
 	glBindTexture(GL_TEXTURE_2D, texture_handle);
 
 	glTexImage2D(
-					GL_TEXTURE_2D, 0, GL_RGB,
+					GL_TEXTURE_2D, 0, GL_RGBA,
 					img_data.getSize().x, img_data.getSize().y,
 					0,
 					GL_RGBA, 
@@ -60,7 +60,8 @@ GLuint loadDDSTex(const char * imagepath){
 	// }
 	
 	/* get the surface desc */ 
-	fread(&header, 124, 1, fp); 
+	int matches = fread(&header, 124, 1, fp); 
+	if (matches == 0) std::cout << "Problem reading" << std::endl;
 
 	unsigned int height      = *(unsigned int*)&(header[8 ]);
 	unsigned int width	     = *(unsigned int*)&(header[12]);
@@ -74,7 +75,8 @@ GLuint loadDDSTex(const char * imagepath){
 	/* how big is it going to be including all mipmaps? */ 
 	bufsize = mipMapCount > 1 ? linearSize * 2 : linearSize; 
 	buffer = (unsigned char*)malloc(bufsize * sizeof(unsigned char)); 
-	fread(buffer, 1, bufsize, fp); 
+	matches = fread(buffer, 1, bufsize, fp);
+	if (matches == 0) std::cout << "Problem reading" << std::endl; 
 	/* close the file pointer */ 
 	fclose(fp);
 

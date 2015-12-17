@@ -24,23 +24,28 @@ void cScene::loadLevel(int id) {
 	char lineHeader[128];
 	// read the first word of the line
 	int res = fscanf(file, "%s", lineHeader);
-	while(1) {	 
+	while(1) {
+		int matches;	 
 		if (res == EOF) {
 			break; // EOF = End Of File. Quit the loop.
 		} else if ( lineHeader == std::string("w") ) {
-			fscanf(file, "%d\n", &map_width );
+			matches = fscanf(file, "%d\n", &map_width );
+			if (matches != 1) std::cout << "Problem reading" << std::endl;
 			v = std::vector<int>(map_width);
 		} else if ( lineHeader == std::string("h") ) {
-			fscanf(file, "%d\n", &map_height );
+			matches = fscanf(file, "%d\n", &map_height );
+			if (matches != 1) std::cout << "Problem reading" << std::endl;
 			map = std::vector< std::vector<int> >();
 		} else if ( lineHeader == std::string("m") ) {
 			int tile;
 			while (i < map_width - 1) {
-				fscanf(file, "%d, ", &tile );
+				matches = fscanf(file, "%d, ", &tile );
+				if (matches != 1) std::cout << "Problem reading" << std::endl;
 				v[i] = tile;
 				i++;
 			}
-			fscanf(file, "%d\n", &tile );
+			matches = fscanf(file, "%d\n", &tile );
+			if (matches != 1) std::cout << "Problem reading" << std::endl;
 			v[i] = tile;
 			map.push_back(v);
 			i = 0;
@@ -75,24 +80,28 @@ void cScene::loadLevelCooldowns(int id) {
 	// read the first word of the line
 	char lineHeader[128];
 	int res = fscanf(file, "%s", lineHeader);
-	while(1) {	 
+	while(1) {
+		int matches;	 
 		if (res == EOF) {
 			break; // EOF = End Of File. Quit the loop.
 		} else if ( lineHeader == std::string("w") ) {
-			fscanf(file, "%d\n", &map_width );
+			matches = fscanf(file, "%d\n", &map_width );
+			if (matches != 1) std::cout << "Problem reading" << std::endl;
 			v2 = std::vector<float>(map_width);
 		} else if ( lineHeader == std::string("h") ) {
-			fscanf(file, "%d\n", &map_height );
+			matches = fscanf(file, "%d\n", &map_height );
+			if (matches != 1) std::cout << "Problem reading" << std::endl;
 			map_cds = std::vector< std::vector<float> >();
 		} else if ( lineHeader == std::string("m") ) {
 			float tile;
 			while (i < map_width - 1) {
-				int match = fscanf(file, "%f, ", &tile );
-				if (match != 1) std::cout << "PROBLEM: " << i << std::endl;
+				matches = fscanf(file, "%f, ", &tile );
+				if (matches != 1) std::cout << "Problem reading: " << i << std::endl;
 				v2[i] = tile;
 				i++;
 			}
-			fscanf(file, "%f\n", &tile );
+			matches = fscanf(file, "%f\n", &tile );
+			if (matches != 1) std::cout << "Problem reading" << std::endl;
 			v2[i] = tile;
 			map_cds.push_back(v2);
 			i = 0;
@@ -277,6 +286,13 @@ void cScene::drawTile(int j, int k) {
 			data->drawModel(MODEL_STOP_SIGN, data->getTextureID(TEX_STOP_SIGN), position + glm::vec3(TILE_SIZE*j, new_y+0.5,-k*TILE_SIZE), rotation, scale, angle);
 			data->drawModel(MODEL_STOP_BODY, data->getTextureID(TEX_METAL), position + glm::vec3(TILE_SIZE*j, new_y+0.5,-k*TILE_SIZE), rotation, scale, angle);
 			break;
+		case 17: // Soil with grass
+			drawColumn(j, k, 0, data->getTextureID(TEX_SOIL));
+			data->drawModel(MODEL_GRASSIE, data->getTextureID(TEX_GRASS), position + glm::vec3(TILE_SIZE*j,0.5,-k*TILE_SIZE), rotation, scale * glm::vec3(1, 0.5, 1), angle);
+			break;
+		case 18: // Level win soil
+			drawColumn(j, k, 0, data->getTextureID(TEX_SOIL));
+			break;
 		default:
 			break;
 	}
@@ -376,6 +392,16 @@ bool cScene::dead() {
 		(map[(int)playerx +1][-(int)playerz] != 0 && map_cds[(int)playerx +1][-(int)playerz] < 0) ||
 		(map[(int)playerx][-(int)playerz +1] != 0 && map_cds[(int)playerx][-(int)playerz +1] < 0) ||
 		(map[(int)playerx +1][-(int)playerz +1] != 0 && map_cds[(int)playerx +1][-(int)playerz +1] < 0)) {
+		return true;
+	}
+	return false;
+}
+
+bool cScene::win() {
+	if ((map[(int)playerx][-(int)playerz] == 18) ||
+		(map[(int)playerx +1][-(int)playerz] == 18) ||
+		(map[(int)playerx][-(int)playerz +1] == 18) ||
+		(map[(int)playerx +1][-(int)playerz +1] == 18)) {
 		return true;
 	}
 	return false;

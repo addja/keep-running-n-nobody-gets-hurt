@@ -37,6 +37,7 @@ class cScene : cEntity {
 		bool correctStep(int i);
 		bool swapTile();
 		bool dead();
+		bool win();
 
 	private:
 		std::vector< std::vector<int> > map;

@@ -2,7 +2,35 @@
 
 #include "include/globals.hpp"
 #include "include/cGame.hpp"
-#include "include/cMenu.hpp"
+
+void initOpenGL() {
+
+	// Initialize GLEW
+	if (glewInit() != GLEW_OK) {
+		fprintf(stderr, "Failed to initialize GLEW\n");
+	}
+
+	// Clear color screen
+	glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
+
+	//glEnable (GL_NORMALIZE);
+
+	// Enable depth test
+	glEnable(GL_DEPTH_TEST);
+
+	// Accept fragment if it closer to the camera than the former one
+	glDepthFunc(GL_LEQUAL);
+	glDepthRange(0.1f, 1.0f);	
+
+	// Cull triangles which normal is not towards the camera
+	//glCullFace(GL_BACK);
+
+	// Enable blending
+	glEnable(GL_BLEND);
+	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+
+	printf("iniOpenGL done correctly\n");
+}
 
 int main() {
 	// create window and initialize it
@@ -17,22 +45,23 @@ int main() {
 	sf::Clock clock;
 	sf::Time elapsed;
 
-	// create menu
-	window.setActive();
-	cMenu menu = cMenu();
-	menu.render();
-	menu.render();
-	window.display();
+	initOpenGL();
 
 	// create game
 	cGame game = cGame();
 
+	window.setActive();
+	game.render();
+	window.display();
+
+	// load game assets
+	game.loadAssets();
 
 	// game loop
     while (window.isOpen()) {
 
         while (window.pollEvent(event)) {
-            
+            char c = ' ';
 			// treat events
 			switch (event.type) {
 				case sf::Event::Closed:
@@ -49,10 +78,15 @@ int main() {
 					//game.resume();
 					break;
 				case sf::Event::KeyPressed:
-					char c;
 					switch (event.key.code) {
+						case sf::Keyboard::Num1: c = '1'; break;
+						case sf::Keyboard::Num2: c = '2'; break;
+						case sf::Keyboard::Num3: c = '3'; break;
 						case sf::Keyboard::A: c = 'A'; break;
 						case sf::Keyboard::D: c = 'D'; break;
+						case sf::Keyboard::E: c = 'E'; break;
+						case sf::Keyboard::N: c = 'N'; break;
+						case sf::Keyboard::R: c = 'R'; break;
 						case sf::Keyboard::S: c = 'S'; break;
 						case sf::Keyboard::W: c = 'W'; break;
 						case sf::Keyboard::Down: c = 'S'; break;
@@ -63,6 +97,7 @@ int main() {
 						default: c = ' '; break;
 					}
 					game.keyPressed(c);
+					if (game.getState() == STATE_QUIT) window.close();
 					break;
 				case sf::Event::KeyReleased:
 					//game.keyReleased(event.key.code);
@@ -74,7 +109,7 @@ int main() {
         }
 		
 		elapsed = clock.getElapsedTime();
-		if (elapsed.asSeconds() > 0) { // 60 fps = 1.0/60
+		if (elapsed.asSeconds() > 1.0/60) { // 60 fps = 1.0/60
 			window.setActive();
 			game.update(clock.restart().asSeconds());
 			game.render();

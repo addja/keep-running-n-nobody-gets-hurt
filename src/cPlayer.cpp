@@ -18,7 +18,7 @@ void cPlayer::render() {
 }
 
 void cPlayer::moveForward() {
-	position = glm::vec3(position.x + glm::sin(angle) * PLAYER_STEP, position.y, position.z + glm::cos(angle) * PLAYER_STEP);
+	position = glm::vec3(position.x + glm::sin(angle) * actual_step, position.y, position.z + glm::cos(angle) * actual_step);
 }
 
 void cPlayer::moveBackward() {
@@ -29,17 +29,17 @@ void cPlayer::lookRight() {
 	if (angle - PI/2 < 0) angle = 2*PI;
 	else angle -= PI/2;
 	//std::cout << angle << std::endl;
-	position = glm::vec3(position.x + glm::sin(angle) * PLAYER_STEP, position.y, position.z + glm::cos(angle) * PLAYER_STEP);
+	position = glm::vec3(position.x + glm::sin(angle) * actual_step, position.y, position.z + glm::cos(angle) * actual_step);
 }
 void cPlayer::lookLeft() {
 	if (angle + PI/2 > 2*PI) angle = 0;
 	else angle += PI/2;
 	//std::cout << angle << std::endl;
-	position = glm::vec3(position.x + glm::sin(angle) * PLAYER_STEP, position.y, position.z + glm::cos(angle) * PLAYER_STEP);
+	position = glm::vec3(position.x + glm::sin(angle) * actual_step, position.y, position.z + glm::cos(angle) * actual_step);
 }
 
 void cPlayer::animation() {
-	if (delay < ANIMATION_DELAY) {
+	if (delay < actual_animation_delay) {
 		delay += 1;
 	} else {
 		++actual_model;
@@ -70,4 +70,20 @@ int cPlayer::getDelay() {
 
 void cPlayer::setDelay(int d) {
 	delay = d;
+}
+
+float cPlayer::getPlayerStep() {
+	return actual_step;
+}
+
+void cPlayer::setPlayerStep(float step) {
+	actual_step = step;
+}
+
+int cPlayer::getAnimationDelay() {
+	return actual_animation_delay;
+}
+
+void cPlayer::setAnimationDelay(int delay) {
+	actual_animation_delay = delay;
 }

@@ -61,8 +61,26 @@
 #define TEX_STOP_SIGN_PATH 		"assets/StopSignFront.jpg"
 #define TEX_COIN_PATH 			"assets/coin-texture.jpg"
 #define TEX_CLOCK_PATH 			"assets/clock.jpg"
-#define TEX_TITLE_PATH			"assets/logo.jpg"
 #define TEX_METAL_PATH			"assets/metal.jpg"
+
+#define TEX_LOADING_PATH		"assets/logo.jpg"
+#define TEX_TITLE_1_PATH		"assets/title_1.jpg"
+#define TEX_TITLE_2_PATH		"assets/title_2.jpg"
+#define TEX_TITLE_3_PATH		"assets/title_3.jpg"
+#define TEX_TITLE_4_PATH		"assets/title_4.jpg"
+#define TEX_TITLE_5_PATH		"assets/title_5.jpg"
+#define TEX_DEATH_1_PATH		"assets/death_1.png"
+#define TEX_DEATH_2_PATH		"assets/death_2.png"
+#define TEX_DEATH_3_PATH		"assets/death_3.png"
+#define TEX_DEATH_4_PATH		"assets/death_4.png"
+#define TEX_DEATH_5_PATH		"assets/death_5.png"
+#define TEX_NEXT_1_PATH			"assets/next_1.png"
+#define TEX_NEXT_2_PATH			"assets/next_2.png"
+#define TEX_NEXT_3_PATH			"assets/next_3.png"
+#define TEX_NEXT_4_PATH			"assets/next_4.png"
+#define TEX_NEXT_5_PATH			"assets/next_5.png"
+#define TEX_WHITE_BACK_PATH		"assets/semi-white.png"
+#define TEX_WIN_PATH			"assets/you_win.png"
 
 #define N_MODELS			28
 #define MODEL_CHAR1			0

@@ -3,41 +3,51 @@
 #include "include/cGame.hpp"
 
 cGame::cGame() {
-	initOpenGL();
-	initGame();
-	// Scaled to 1, so we move it up 0.5 (half its bounding box) so it is above the y = 0, which is the ground
-	player = cPlayer(glm::vec3(32.0,0.5,-2.0), glm::vec3(0,1,0), glm::vec3(1), PI, &data);
-	player.setActualModel(MODEL_CHAR1);
-	player.setDelay(0);
-	scene = cScene(glm::vec3(0,0,0), glm::vec3(0,1,0), glm::vec3(1), 0, &data);
-	scene.loadLevel(1);
-	scene.loadLevelCooldowns(1);
-	scene.setPlayerPosition(glm::vec3(32.0,0.5,-2.0));
-	swap_tile = false;
-	limit = (PI + PI/4)/13;
+	setState(STATE_LOADING);
 }
 
 cGame::~cGame() {
 }
 
 void cGame::update(float dt) {
-	if (swap_tile) {
+	if (state == STATE_LOADING || state == STATE_WIN) {
+		// nothing
+	} else if (state == STATE_MENU || state == STATE_NEXT_LEVEL || state == STATE_DEATH) {
+		menu.update();
+	} else if (state == STATE_SWAP) {
 		if (data.rotating_angle >= PI + PI/4) {
 			if (data.front == 1) data.front = -1;
 			else data.front = 1;
 
 			scene.updatePlayerPosition(player.getPosition());
-			swap_tile = 0;
+			player.setPlayerStep(PLAYER_STEP_NORMAL);
+			player.setAnimationDelay(ANIMATION_DELAY_NORMAL);
+			setState(STATE_RUNNING);
 			data.rotating_angle = PI/4;
-			limit = (PI + PI/4)/13;
 		} else {
-			data.rotating_angle += 0.08;
-			if (data.rotating_angle >= limit) {
-				player.update(dt);
-				scene.updatePlayerPosition(player.getPosition());
-				data.cameraP = player.getPosition();
-				limit += (PI + PI/4)/13;
+			data.rotating_angle += 0.4;
+			player.update(dt);
+			scene.updatePlayerPosition(player.getPosition());
+
+			if (scene.itemCollected()) {
+				std::cout << "item collected!\n";
 			}
+	//		else if (scene.playerHit()) {
+	//			TODO
+	//		}
+
+			if (scene.dead()) {
+				std::cout << "DEAD!\n";
+				setState(STATE_DEATH);
+				return;
+			} else if (scene.win()) {
+				std::cout << "WIN!\n";
+				if (current_level < MAX_LEVEL) setState(STATE_NEXT_LEVEL);
+				else setState(STATE_WIN);
+				return;
+			}
+
+			data.cameraP = player.getPosition();
 		}
 	} else {
 		glm::vec3 tmp;
@@ -55,12 +65,19 @@ void cGame::update(float dt) {
 //			TODO
 //		}
  		else if (scene.swapTile()) {
-			swap_tile = true;
+			setState(STATE_SWAP);
+			player.setPlayerStep(PLAYER_STEP_SWAP);
+			player.setAnimationDelay(ANIMATION_DELAY_SWAP);
 		}
 
 		if (scene.dead()) {
 			std::cout << "DEAD!\n";
-			restartGame();
+			setState(STATE_DEATH);
+			return;
+		} else if (scene.win()) {
+			std::cout << "WIN!\n";
+			if (current_level < MAX_LEVEL) setState(STATE_NEXT_LEVEL);
+			else setState(STATE_WIN);
 			return;
 		}
 
@@ -75,86 +92,175 @@ void cGame::render() {
 	// Clear the screen
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-	// Draw scene
-	scene.render();
+	switch (state) {
+		case STATE_LOADING:
+			menu.render();
+			break;
+		case STATE_MENU:
+			menu.render();
+			break;
+		case STATE_DEATH:
+			scene.render();
+			player.render();
+			menu.render();
+			break;
+		case STATE_NEXT_LEVEL:
+			scene.render();
+			player.render();
+			menu.render();
+			break;
+		case STATE_WIN:
+			// credits
+			menu.render();
+			break;
+		case STATE_SWAP:
+			scene.render();
+			player.render();
+			break;
+		case STATE_RUNNING:
+			// Draw scene
+			scene.render();
 
-	// Draw model
-	player.render();	
+			// Draw model
+			player.render();	
+		default:
+			break;
+	}
 }
 
 
 void cGame::keyPressed(char c) {
 	glm::vec3 tmp;
-	switch (c) {
-		case 'W':
-			// DEPRECATED: NO MOVING FORWARD FOR OUR BOY.
-			break;
-		case 'S':
-			// DEPRECATED: NO MOVING DOWN FOR OUR BOY.
-			break;
-		case 'D':
-			tmp = player.getPosition();
-			player.lookRight();
-			scene.updatePlayerPosition(player.getPosition());
-			if (scene.illegalMov()) {
-				player.setPosition(tmp);
+
+	switch (state) {
+		case STATE_MENU:
+			switch (c) {
+				case '1':
+					initializeLevel(1);
+					break;
+				case '2':
+					initializeLevel(2);
+					break;
+				case '3':
+					initializeLevel(3);
+					break;
+				case 'E':
+					setState(STATE_QUIT);
+					break;
+				case 'S':
+					initializeLevel(1);
+					break;
+				default:
+					break;
 			}
-			//	else if (scene.itemCollected()) {
-			//		TODO
-			//	}
-			//	else if (scene.playerHit()) {
-			//		TODO
-			//	}
-			//  else if (scene.swapTile()) {
-			//		TODO
-			//	}
 			break;
-		case 'A':
-			tmp = player.getPosition();
-			player.lookLeft();
-			scene.updatePlayerPosition(player.getPosition());
-			if (scene.illegalMov()) {
-				player.setPosition(tmp);
+		case STATE_DEATH:
+			switch (c) {
+				case 'E':
+					setState(STATE_MENU);
+					break;
+				case 'R':
+					retryLevel();
+					break;
+				default:
+					break;
 			}
-			//	else if (scene.itemCollected()) {
-			//		TODO
-			//	}
-			//	else if (scene.playerHit()) {
-			//		TODO
-			//	}
-			//  else if (scene.swapTile()) {
-			//		TODO
-			//	}
+			break;
+		case STATE_WIN:
+			switch (c) {
+				case 'E':
+					setState(STATE_MENU);
+					break;
+				default:
+					break;
+			}
+			break;
+		case STATE_NEXT_LEVEL:
+			switch (c) {
+				case 'E':
+					setState(STATE_MENU);
+					break;
+				case 'N':
+					initializeLevel(current_level+1);
+					break;
+				case 'R':
+					retryLevel();
+					break;
+				default:
+					break;
+			}
+			break;
+		case STATE_RUNNING:
+			switch (c) {
+				case 'D':
+					tmp = player.getPosition();
+					player.lookRight();
+					scene.updatePlayerPosition(player.getPosition());
+					if (scene.illegalMov()) {
+						player.setPosition(tmp);
+					}
+					else if (scene.itemCollected()) {
+						std::cout << "item collected!\n";
+					}
+					//	else if (scene.playerHit()) {
+					//		TODO
+					//	}
+					else if (scene.swapTile()) {
+						setState(STATE_SWAP);
+						player.setPlayerStep(PLAYER_STEP_SWAP);
+						player.setAnimationDelay(ANIMATION_DELAY_SWAP);
+					}
+
+					if (scene.dead()) {
+						std::cout << "DEAD!\n";
+						setState(STATE_DEATH);
+						return;
+					} else if (scene.win()) {
+						std::cout << "WIN!\n";
+						if (current_level < MAX_LEVEL) setState(STATE_NEXT_LEVEL);
+						else setState(STATE_WIN);
+						return;
+					}
+					break;
+				case 'A':
+					tmp = player.getPosition();
+					player.lookLeft();
+					scene.updatePlayerPosition(player.getPosition());
+					if (scene.illegalMov()) {
+						player.setPosition(tmp);
+					}
+					else if (scene.itemCollected()) {
+						std::cout << "item collected!\n";
+					}
+					//	else if (scene.playerHit()) {
+					//		TODO
+					//	}
+					else if (scene.swapTile()) {
+						setState(STATE_SWAP);
+						player.setPlayerStep(PLAYER_STEP_SWAP);
+						player.setAnimationDelay(ANIMATION_DELAY_SWAP);
+					}
+
+					if (scene.dead()) {
+						std::cout << "DEAD!\n";
+						setState(STATE_DEATH);
+						return;
+					} else if (scene.win()) {
+						std::cout << "WIN!\n";
+						if (current_level < MAX_LEVEL) setState(STATE_NEXT_LEVEL);
+						else setState(STATE_WIN);
+						return;
+					}
+					break;
+			}
+			break;
+		default:
 			break;
 	}
+	
 }
 
-void cGame::initOpenGL() {
-
-	// Initialize GLEW
-	if (glewInit() != GLEW_OK) {
-		fprintf(stderr, "Failed to initialize GLEW\n");
-	}
-
-	// Clear color screen
-	glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
-
-	//glEnable (GL_NORMALIZE);
-
-	// Enable depth test
-	glEnable(GL_DEPTH_TEST);
-
-	// Accept fragment if it closer to the camera than the former one
-	glDepthFunc(GL_LEQUAL);
-	glDepthRange(0.1f, 1.0f);	
-
-	// Cull triangles which normal is not towards the camera
-	glCullFace(GL_BACK);
-
-	printf("iniOpenGL done correctly\n");
-}
-
-void cGame::initGame() {
+void cGame::loadAssets() {
 	data.loadTexture(TEX_SOIL,TEX_SOIL_PATH);
 	data.loadTexture(TEX_STONE,TEX_STONE_PATH);
 	data.loadTexture(TEX_GRASS,TEX_GRASS_PATH);
@@ -201,18 +307,49 @@ void cGame::initGame() {
 	data.loadModel(MODEL_STOP_BODY,MODEL_STOP_BODY_PATH);
 	data.loadModel(MODEL_COIN,MODEL_COIN_PATH);
 	data.loadModel(MODEL_CLOCK,MODEL_CLOCK_PATH);
+
+	menu.loadAssets();
+
+	setState(STATE_MENU);
 }
 
-void cGame::restartGame() {
+void cGame::initializeLevel(int level) {
+	// Scaled to 1, so we move it up 0.5 (half its bounding box) so it is above the y = 0, which is the ground
+	current_level = level;
 	player = cPlayer(glm::vec3(32.0,0.5,-2.0), glm::vec3(0,1,0), glm::vec3(1), PI, &data);
 	player.setActualModel(MODEL_CHAR1);
+	player.setPlayerStep(PLAYER_STEP_NORMAL);
+	player.setAnimationDelay(ANIMATION_DELAY_NORMAL);
 	player.setDelay(0);
-	scene.loadLevelCooldowns(1);
+	scene = cScene(glm::vec3(0,0,0), glm::vec3(0,1,0), glm::vec3(1), 0, &data);
+	scene.loadLevel(level);
+	scene.loadLevelCooldowns(level);
 	scene.setPlayerPosition(glm::vec3(32.0,0.5,-2.0));
-	swap_tile = false;
-	limit = (PI + PI/4)/13;
 	data.front = 1;
 	data.rotating_angle = PI/4;
 	data.cameraP = player.getPosition();
+	setState(STATE_RUNNING);
 }
 
+void cGame::retryLevel() {
+	player = cPlayer(glm::vec3(32.0,0.5,-2.0), glm::vec3(0,1,0), glm::vec3(1), PI, &data);
+	player.setActualModel(MODEL_CHAR1);
+	player.setPlayerStep(PLAYER_STEP_NORMAL);
+	player.setAnimationDelay(ANIMATION_DELAY_NORMAL);
+	player.setDelay(0);
+	scene.loadLevelCooldowns(current_level);
+	scene.setPlayerPosition(glm::vec3(32.0,0.5,-2.0));
+	data.front = 1;
+	data.rotating_angle = PI/4;
+	data.cameraP = player.getPosition();
+	setState(STATE_RUNNING);
+}
+
+int cGame::getState() {
+	return state;
+}
+
+void cGame::setState(int st) {
+	state = st;
+	menu.setState(st);
+}
