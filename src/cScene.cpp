@@ -230,7 +230,6 @@ void cScene::drawTile(int j, int k) {
 			drawColumn(j, k, 1, data->getTextureID(TEX_STONE3));
 			//drawLittleBlock(j, k, 7, glm::vec3(0.45), data->getTextureID(TEX_SOIL));
 			break;
-			break;
 		case 4: // Swap soil
 			drawColumn(j, k, 0, data->getTextureID(TEX_STONE));
 			break;
@@ -318,6 +317,9 @@ void cScene::drawTile(int j, int k) {
 			break;
 		case 22: // Swap soil
 			drawColumn(j, k, 0, data->getTextureID(TEX_SOIL));
+			break;
+		case 23: // Wall
+			drawColumn(j, k, 3, data->getTextureID(TEX_COL));
 			break;
 		default:
 			break;
