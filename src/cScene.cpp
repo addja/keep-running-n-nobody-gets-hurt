@@ -227,7 +227,7 @@ void cScene::drawTile(int j, int k) {
 			//drawLittleBlock(j, k, 7, glm::vec3(0.45), data->getTextureID(TEX_SOIL));
 			break;
 		case 3: // Wall 2
-			drawColumn(j, k, 5, data->getTextureID(TEX_COL));
+			drawColumn(j, k, 1, data->getTextureID(TEX_STONE3));
 			//drawLittleBlock(j, k, 7, glm::vec3(0.45), data->getTextureID(TEX_SOIL));
 			break;
 			break;
