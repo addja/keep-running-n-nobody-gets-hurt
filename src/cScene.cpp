@@ -423,10 +423,10 @@ int cScene::itemCollected() {
 }
 
 bool cScene::dead() {
-	if ((map[(int)playerx][-(int)playerz] != 0 && map_cds[(int)playerx][-(int)playerz] < 0) ||
-		(map[(int)playerx +1][-(int)playerz] != 0 && map_cds[(int)playerx +1][-(int)playerz] < 0) ||
-		(map[(int)playerx][-(int)playerz +1] != 0 && map_cds[(int)playerx][-(int)playerz +1] < 0) ||
-		(map[(int)playerx +1][-(int)playerz +1] != 0 && map_cds[(int)playerx +1][-(int)playerz +1] < 0)) {
+	if (map_cds[(int)playerx][-(int)playerz] < 0 ||
+		map_cds[(int)playerx +1][-(int)playerz] < 0 ||
+		map_cds[(int)playerx][-(int)playerz +1] < 0 ||
+		map_cds[(int)playerx +1][-(int)playerz +1] < 0) {
 		return true;
 	}
 	return false;
