@@ -48,7 +48,7 @@ int main() {
 	initOpenGL();
 
 	// create game
-	cGame game = cGame();
+	cGame game;
 
 	window.setActive();
 	game.render();
@@ -96,8 +96,11 @@ int main() {
 						case sf::Keyboard::Escape: window.close(); break;
 						default: c = ' '; break;
 					}
+					window.setActive();
 					game.keyPressed(c);
 					if (game.getState() == STATE_QUIT) window.close();
+					game.render();
+					window.display();
 					break;
 				case sf::Event::KeyReleased:
 					//game.keyReleased(event.key.code);

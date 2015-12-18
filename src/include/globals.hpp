@@ -10,6 +10,7 @@
 
 // SFML libraries
 #include <SFML/Graphics.hpp> 
+#include <SFML/Audio.hpp>
 #include <SFML/OpenGL.hpp>
 
 // math library
@@ -140,7 +141,35 @@
 #define MODEL_COIN_PATH				"assets/coin.obj"
 #define MODEL_CLOCK_PATH			"assets/clock.obj"
 
+// Sounds array size
+#define NUM_SOUNDS			1
+
+// Sounds identifiers
+#define SOUND_COIN			0
+
+// Sounds paths
+#define SOUND_COIN_PATH		"assets/sounds/coin.ogg"
+
+// Musics array size
+#define NUM_MUSICS			7
+
+// Musics identifiers
+#define MUSIC_MENU			0
+#define MUSIC_LEVEL1		1
+#define MUSIC_LEVEL2		2
+#define MUSIC_LEVEL3		3
+#define MUSIC_DEATH			4
+#define MUSIC_NEXT			5
+#define MUSIC_WIN			6
+
+// Musics path
+#define MUSIC_MENU_PATH		"assets/music/conversion.ogg"
+#define MUSIC_DEATH_PATH	"assets/music/sans.ogg"
+#define MUSIC_NEXT_PATH		"assets/music/hey.ogg"
+#define MUSIC_WIN_PATH		"assets/music/tale.ogg"
+#define MUSIC_LEVEL1_PATH	"assets/music/spear.ogg"
+#define MUSIC_LEVEL2_PATH	"assets/music/glamour.ogg"
+#define MUSIC_LEVEL3_PATH	"assets/music/core.ogg"
+
 #define DEBUG_MODE		0	// 0 off | 1 on
 #define TILE_SIZE		2
-
-

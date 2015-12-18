@@ -42,4 +42,6 @@ class cGame {
 		cMenu menu;
 		int state;
 		int current_level;
+		int coins;
+		bool clck;
 };

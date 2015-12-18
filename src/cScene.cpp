@@ -286,9 +286,8 @@ void cScene::drawTile(int j, int k) {
 			data->drawModel(MODEL_STOP_SIGN, data->getTextureID(TEX_STOP_SIGN), position + glm::vec3(TILE_SIZE*j, new_y+0.5,-k*TILE_SIZE), rotation, scale, angle);
 			data->drawModel(MODEL_STOP_BODY, data->getTextureID(TEX_METAL), position + glm::vec3(TILE_SIZE*j, new_y+0.5,-k*TILE_SIZE), rotation, scale, angle);
 			break;
-		case 17: // Soil with grass
-			drawColumn(j, k, 0, data->getTextureID(TEX_SOIL));
-			data->drawModel(MODEL_GRASSIE, data->getTextureID(TEX_GRASS), position + glm::vec3(TILE_SIZE*j,0.5,-k*TILE_SIZE), rotation, scale * glm::vec3(1, 0.5, 1), angle);
+		case 17: // Stone
+			drawColumn(j, k, 0, data->getTextureID(TEX_STONE));
 			break;
 		case 18: // Level win soil
 			drawColumn(j, k, 0, data->getTextureID(TEX_SOIL));
@@ -402,6 +401,16 @@ bool cScene::win() {
 		(map[(int)playerx +1][-(int)playerz] == 18) ||
 		(map[(int)playerx][-(int)playerz +1] == 18) ||
 		(map[(int)playerx +1][-(int)playerz +1] == 18)) {
+		return true;
+	}
+	return false;
+}
+
+bool cScene::slowed() {
+	if ((map[(int)playerx][-(int)playerz] == 7) ||
+		(map[(int)playerx +1][-(int)playerz] == 7) ||
+		(map[(int)playerx][-(int)playerz +1] == 7) ||
+		(map[(int)playerx +1][-(int)playerz +1] == 7)) {
 		return true;
 	}
 	return false;

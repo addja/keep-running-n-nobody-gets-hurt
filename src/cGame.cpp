@@ -29,8 +29,12 @@ void cGame::update(float dt) {
 			player.update(dt);
 			scene.updatePlayerPosition(player.getPosition());
 
-			if (scene.itemCollected()) {
+			int item = scene.itemCollected();
+			if (item != 0) {
 				std::cout << "item collected!\n";
+				data.playSound(SOUND_COIN);
+				if (item == 1) ++coins;
+				else clck = true;
 			}
 	//		else if (scene.playerHit()) {
 	//			TODO
@@ -58,13 +62,27 @@ void cGame::update(float dt) {
 		if (scene.illegalMov()) {
 			player.setPosition(tmp);
 		}
-		else if (scene.itemCollected()) {
+		
+		int item = scene.itemCollected();
+		if (item != 0) {
 			std::cout << "item collected!\n";
+			data.playSound(SOUND_COIN);
+			if (item == 1) ++coins;
+			else clck = true;
 		}
 //		else if (scene.playerHit()) {
 //			TODO
 //		}
- 		else if (scene.swapTile()) {
+
+		if (scene.slowed()) {
+			player.setPlayerStep(PLAYER_STEP_SLOWED);
+			player.setAnimationDelay(ANIMATION_DELAY_SLOWED);
+		} else {
+			player.setPlayerStep(PLAYER_STEP_NORMAL);
+			player.setAnimationDelay(ANIMATION_DELAY_NORMAL);
+		}
+ 		
+ 		if (scene.swapTile()) {
 			setState(STATE_SWAP);
 			player.setPlayerStep(PLAYER_STEP_SWAP);
 			player.setAnimationDelay(ANIMATION_DELAY_SWAP);
@@ -131,6 +149,7 @@ void cGame::render() {
 
 void cGame::keyPressed(char c) {
 	glm::vec3 tmp;
+	int item;
 
 	switch (state) {
 		case STATE_MENU:
@@ -199,13 +218,27 @@ void cGame::keyPressed(char c) {
 					if (scene.illegalMov()) {
 						player.setPosition(tmp);
 					}
-					else if (scene.itemCollected()) {
+
+					item = scene.itemCollected();
+					if (item != 0) {
 						std::cout << "item collected!\n";
+						data.playSound(SOUND_COIN);
+						if (item == 1) ++coins;
+						else clck = true;
 					}
 					//	else if (scene.playerHit()) {
 					//		TODO
 					//	}
-					else if (scene.swapTile()) {
+
+					if (scene.slowed()) {
+						player.setPlayerStep(PLAYER_STEP_SLOWED);
+						player.setAnimationDelay(ANIMATION_DELAY_SLOWED);
+					} else {
+						player.setPlayerStep(PLAYER_STEP_NORMAL);
+						player.setAnimationDelay(ANIMATION_DELAY_NORMAL);
+					}
+			 		
+			 		if (scene.swapTile()) {
 						setState(STATE_SWAP);
 						player.setPlayerStep(PLAYER_STEP_SWAP);
 						player.setAnimationDelay(ANIMATION_DELAY_SWAP);
@@ -229,13 +262,27 @@ void cGame::keyPressed(char c) {
 					if (scene.illegalMov()) {
 						player.setPosition(tmp);
 					}
-					else if (scene.itemCollected()) {
+
+					item = scene.itemCollected();
+					if (item != 0) {
 						std::cout << "item collected!\n";
+						data.playSound(SOUND_COIN);
+						if (item == 1) ++coins;
+						else clck = true;
 					}
 					//	else if (scene.playerHit()) {
 					//		TODO
 					//	}
-					else if (scene.swapTile()) {
+					
+					if (scene.slowed()) {
+						player.setPlayerStep(PLAYER_STEP_SLOWED);
+						player.setAnimationDelay(ANIMATION_DELAY_SLOWED);
+					} else {
+						player.setPlayerStep(PLAYER_STEP_NORMAL);
+						player.setAnimationDelay(ANIMATION_DELAY_NORMAL);
+					}
+			 		
+			 		if (scene.swapTile()) {
 						setState(STATE_SWAP);
 						player.setPlayerStep(PLAYER_STEP_SWAP);
 						player.setAnimationDelay(ANIMATION_DELAY_SWAP);
@@ -261,6 +308,7 @@ void cGame::keyPressed(char c) {
 }
 
 void cGame::loadAssets() {
+	// Textures for game
 	data.loadTexture(TEX_SOIL,TEX_SOIL_PATH);
 	data.loadTexture(TEX_STONE,TEX_STONE_PATH);
 	data.loadTexture(TEX_GRASS,TEX_GRASS_PATH);
@@ -279,6 +327,8 @@ void cGame::loadAssets() {
 	data.loadTexture(TEX_METAL,TEX_METAL_PATH);
 	data.loadTexture(TEX_COIN,TEX_COIN_PATH);
 	data.loadTexture(TEX_CLOCK,TEX_CLOCK_PATH);
+
+	// Models for game
 	data.loadModel(MODEL_CHAR1,MODEL_CHAR1_PATH);
 	data.loadModel(MODEL_CHAR2,MODEL_CHAR2_PATH);
 	data.loadModel(MODEL_CHAR3,MODEL_CHAR3_PATH);
@@ -308,7 +358,20 @@ void cGame::loadAssets() {
 	data.loadModel(MODEL_COIN,MODEL_COIN_PATH);
 	data.loadModel(MODEL_CLOCK,MODEL_CLOCK_PATH);
 
+	// Textures for menu
 	menu.loadAssets();
+
+	// Sounds
+	data.loadSound(SOUND_COIN,SOUND_COIN_PATH);
+
+	// Music
+	data.loadMusic(MUSIC_MENU,MUSIC_MENU_PATH);	
+	data.loadMusic(MUSIC_DEATH,MUSIC_DEATH_PATH);
+	data.loadMusic(MUSIC_NEXT,MUSIC_NEXT_PATH);	
+	data.loadMusic(MUSIC_WIN,MUSIC_WIN_PATH);		
+	data.loadMusic(MUSIC_LEVEL1,MUSIC_LEVEL1_PATH);
+	data.loadMusic(MUSIC_LEVEL2,MUSIC_LEVEL2_PATH);
+	data.loadMusic(MUSIC_LEVEL3,MUSIC_LEVEL3_PATH);
 
 	setState(STATE_MENU);
 }
@@ -328,7 +391,10 @@ void cGame::initializeLevel(int level) {
 	data.front = 1;
 	data.rotating_angle = PI/4;
 	data.cameraP = player.getPosition();
+	data.blur = false;
 	setState(STATE_RUNNING);
+	coins = 0;
+	clck = false;
 }
 
 void cGame::retryLevel() {
@@ -342,6 +408,7 @@ void cGame::retryLevel() {
 	data.front = 1;
 	data.rotating_angle = PI/4;
 	data.cameraP = player.getPosition();
+	data.blur = false;
 	setState(STATE_RUNNING);
 }
 
@@ -350,6 +417,50 @@ int cGame::getState() {
 }
 
 void cGame::setState(int st) {
+	switch (state) {
+		case STATE_MENU:
+			data.stopMusic(MUSIC_MENU);
+			break;
+		case STATE_RUNNING:
+			if (st != STATE_SWAP) data.stopMusic(current_level);
+			break;
+		case STATE_DEATH:
+			data.stopMusic(MUSIC_DEATH);
+			data.blur = false;
+			break;
+		case STATE_NEXT_LEVEL:
+			data.stopMusic(MUSIC_NEXT);
+			data.blur = false;
+			break;
+		case STATE_WIN:
+			data.stopMusic(MUSIC_WIN);
+			break;
+		default:
+			break;
+	}
+
+	switch (st) {
+		case STATE_MENU:
+			data.playMusic(MUSIC_MENU);
+			break;
+		case STATE_RUNNING:
+			if (state != STATE_SWAP) data.playMusic(current_level);
+			break;
+		case STATE_DEATH:
+			data.playMusic(MUSIC_DEATH);
+			data.blur = true;
+			break;
+		case STATE_NEXT_LEVEL:
+			data.playMusic(MUSIC_NEXT);
+			data.blur = true;
+			break;
+		case STATE_WIN:
+			data.playMusic(MUSIC_WIN);
+			break;
+		default:
+			break;
+	}
+
 	state = st;
 	menu.setState(st);
 }

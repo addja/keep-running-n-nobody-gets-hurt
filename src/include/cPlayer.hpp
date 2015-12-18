@@ -4,7 +4,7 @@
 #include "cEntity.hpp"
 
 #define PLAYER_STEP_NORMAL 		0.5f
-#define PLAYER_STEP_SLOWED 		0.2f
+#define PLAYER_STEP_SLOWED 		0.3f
 #define PLAYER_STEP_SWAP   		0.45f
 #define ANIMATION_DELAY_NORMAL	1
 #define ANIMATION_DELAY_SLOWED  2

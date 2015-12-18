@@ -4,7 +4,7 @@
 #include "cEntity.hpp"
 
 #define OBJECT_ROTATION 0.9
-#define CD_REDUCTION 0.122
+#define CD_REDUCTION 0.15
 
 class cScene : cEntity {
 
@@ -38,6 +38,7 @@ class cScene : cEntity {
 		bool swapTile();
 		bool dead();
 		bool win();
+		bool slowed();
 
 	private:
 		std::vector< std::vector<int> > map;

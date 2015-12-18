@@ -165,6 +165,7 @@ void cModel::initGL() {
 	glBufferData(GL_ARRAY_BUFFER, normals_triangles.size() * sizeof(glm::vec3), &normals_triangles[0], GL_STATIC_DRAW);
 	
 	programID = loadShaders("src/shaders/model.vert", "src/shaders/model.frag");
+	programBlurID = loadShaders("src/shaders/model.vert", "src/shaders/model_blur.frag");
 	
 	mvp_handle = glGetUniformLocation(programID, "MVP");
 	ViewMatrix_handle = glGetUniformLocation(programID, "V");
@@ -175,7 +176,7 @@ void cModel::initGL() {
 	calcBBox();
 }
 
-void cModel::render(GLuint texture, glm::vec3 p, glm::vec3 r, glm::vec3 s, float angle, glm::vec3 cameraP, int front, float rot) {
+void cModel::render(GLuint texture, glm::vec3 p, glm::vec3 r, glm::vec3 s, float angle, glm::vec3 cameraP, int front, float rot, bool blur) {
 
 	// Projection matrix : 45° Field of View, 4:3 ratio, display range : 0.1 unit <-> 100 units
 	 glm::mat4 Projection = glm::perspective(glm::radians(45.0f), (float) WNDW_WIDTH / (float)WNDW_HEIGHT, 0.1f, 1.0f);
@@ -209,7 +210,8 @@ void cModel::render(GLuint texture, glm::vec3 p, glm::vec3 r, glm::vec3 s, float
 	glm::mat4 mvp = Projection * View * Model; // Remember, matrix multiplication is the other way around
 
 	// Use shader
-	glUseProgram(programID);
+	if (blur) glUseProgram(programBlurID);
+	else glUseProgram(programID);
 	
 	// Send our transformation to the currently bound shader, in the "MVP" uniform
 	// This is done in the main loop since each model will have a different MVP matrix (At least for the M part)
