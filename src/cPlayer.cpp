@@ -26,14 +26,16 @@ void cPlayer::moveBackward() {
 }
 
 void cPlayer::lookRight() {
-	if (angle - PI/2 < 0) angle = 2*PI;
-	else angle -= PI/2;
+	//if (angle - PI/2 < 0) angle = 2*PI;
+	//else angle -= PI/2;
+	angle -= PI/2;
 	//std::cout << angle << std::endl;
 	position = glm::vec3(position.x + glm::sin(angle) * actual_step, position.y, position.z + glm::cos(angle) * actual_step);
 }
 void cPlayer::lookLeft() {
-	if (angle + PI/2 > 2*PI) angle = 0;
-	else angle += PI/2;
+	//if (angle + PI/2 > 2*PI) angle = 0;
+	//else angle += PI/2;
+	angle += PI/2;
 	//std::cout << angle << std::endl;
 	position = glm::vec3(position.x + glm::sin(angle) * actual_step, position.y, position.z + glm::cos(angle) * actual_step);
 }
