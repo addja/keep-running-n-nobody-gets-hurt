@@ -37,7 +37,11 @@ void cGame::update(float dt) {
 				std::cout << "item collected!\n";
 				data.playSound(SOUND_COIN);
 				if (item == 1) hud.increaseCoins();
-				else clck = true;
+				else {
+					clck = true;
+					clck_delay = scene.rot;
+					scene.setReduction(CD_REDUCTION_CLOCK);
+				}
 			}
 
 			if (scene.dead()) {
@@ -73,7 +77,11 @@ void cGame::update(float dt) {
 			std::cout << "item collected!\n";
 			data.playSound(SOUND_COIN);
 			if (item == 1) hud.increaseCoins();
-			else clck = true;
+			else {
+				clck = true;
+				clck_delay = scene.rot;
+				scene.setReduction(CD_REDUCTION_CLOCK);
+			}
 		}
 
 		if (scene.slowed()) {
@@ -110,6 +118,19 @@ void cGame::update(float dt) {
 		data.cameraP = player.getPosition();
 	
 		scene.update(dt);
+	}
+
+	if (clck) {
+		player.setPlayerStep(PLAYER_STEP_CLOCK);
+		player.setAnimationDelay(ANIMATION_DELAY_CLOCK);
+
+		if (scene.rot - clck_delay > PI || scene.rot - clck_delay < -PI) {
+			clck = false;
+			clck_delay = 0;
+			scene.setReduction(CD_REDUCTION_NORMAL);
+			player.setPlayerStep(PLAYER_STEP_NORMAL);
+			player.setAnimationDelay(ANIMATION_DELAY_NORMAL);
+		}
 	}
 }
 
@@ -241,7 +262,13 @@ void cGame::keyPressed(char c) {
 						std::cout << "item collected!\n";
 						data.playSound(SOUND_COIN);
 						if (item == 1) hud.increaseCoins();
-						else clck = true;
+						else {
+							clck = true;
+							clck_delay = scene.rot;
+							scene.setReduction(CD_REDUCTION_CLOCK);
+							player.setPlayerStep(PLAYER_STEP_CLOCK);
+							player.setAnimationDelay(ANIMATION_DELAY_CLOCK);
+						}
 					}
 
 					if (scene.slowed()) {
@@ -286,7 +313,13 @@ void cGame::keyPressed(char c) {
 						std::cout << "item collected!\n";
 						data.playSound(SOUND_COIN);
 						if (item == 1) hud.increaseCoins();
-						else clck = true;
+						else {
+							clck = true;
+							clck_delay = scene.rot;
+							scene.setReduction(CD_REDUCTION_CLOCK);
+							player.setPlayerStep(PLAYER_STEP_CLOCK);
+							player.setAnimationDelay(ANIMATION_DELAY_CLOCK);
+						}
 					}
 					//	else if (scene.playerHit()) {
 					//		TODO
@@ -421,12 +454,14 @@ void cGame::initializeLevel(int level) {
 	scene.loadLevelCooldowns(level);
 	scene.loadLevelObjects(level);
 	scene.setPlayerPosition(glm::vec3(32.0,0.5,-2.0));
+	scene.setReduction(CD_REDUCTION_NORMAL);
 	data.front = 1;
 	data.rotating_angle = PI/4;
 	data.cameraP = player.getPosition();
 	data.blur = false;
 	setState(STATE_RUNNING);
 	clck = false;
+	clck_delay = 0;
 	hud.setTimerOrigin(data.timer);
 	hud.setCoins(0);
 }
@@ -440,12 +475,14 @@ void cGame::retryLevel() {
 	scene.loadLevelCooldowns(current_level);
 	scene.loadLevelObjects(current_level);
 	scene.setPlayerPosition(glm::vec3(32.0,0.5,-2.0));
+	scene.setReduction(CD_REDUCTION_NORMAL);
 	data.front = 1;
 	data.rotating_angle = PI/4;
 	data.cameraP = player.getPosition();
 	data.blur = false;
 	setState(STATE_RUNNING);
 	clck = false;
+	clck_delay = 0;
 	hud.setTimerOrigin(data.timer);
 	hud.setCoins(0);
 }

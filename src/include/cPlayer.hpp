@@ -6,9 +6,11 @@
 #define PLAYER_STEP_NORMAL 		0.5f
 #define PLAYER_STEP_SLOWED 		0.3f
 #define PLAYER_STEP_SWAP   		0.45f
+#define PLAYER_STEP_CLOCK  		0.1f
 #define ANIMATION_DELAY_NORMAL	1
 #define ANIMATION_DELAY_SLOWED  2
 #define ANIMATION_DELAY_SWAP	3
+#define ANIMATION_DELAY_CLOCK	8
 
 class cPlayer : cEntity {
 

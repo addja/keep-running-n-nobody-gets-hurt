@@ -4,7 +4,8 @@
 #include "cEntity.hpp"
 
 #define OBJECT_ROTATION 0.9
-#define CD_REDUCTION 0.22
+#define CD_REDUCTION_NORMAL 0.22
+#define CD_REDUCTION_CLOCK	0.05
 
 class cScene : cEntity {
 
@@ -44,10 +45,14 @@ class cScene : cEntity {
 		bool slowed();
 		bool hit();
 
+		float getReduction();
+		void setReduction(float r);
+
 	private:
 		std::vector< std::vector<int> > map;
 		std::vector< std::vector<float> > map_cds;
 		std::vector< std::vector<int> > objmap;
 		int map_width, map_height;
 		float playerx, playerz;
+		float actual_reduction;
 };

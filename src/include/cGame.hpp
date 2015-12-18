@@ -46,4 +46,5 @@ class cGame {
 		int state;
 		int current_level;
 		bool clck;
+		float clck_delay;
 };

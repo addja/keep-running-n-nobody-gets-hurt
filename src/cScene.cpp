@@ -156,7 +156,7 @@ void cScene::update(float dt) {
 	// A dream: destroying the map
 	for (int i = 0; i < (int)map_cds.size(); i++) {
 		for (int j = 0; j < (int)map_cds[0].size(); j++) {
-			map_cds[i][j] -= CD_REDUCTION;
+			map_cds[i][j] -= actual_reduction;
 		}
 	}
 }
@@ -472,4 +472,12 @@ void cScene::drawObject(int j, int k) {
 		default:
 			break;
 	}
+}
+
+float cScene::getReduction() {
+	return actual_reduction;
+}
+
+void cScene::setReduction(float r) {
+	actual_reduction = r;
 }
