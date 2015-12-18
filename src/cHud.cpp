@@ -88,10 +88,10 @@ void cHud::printText(int x, int y, int size, char * text) {
 	std::vector<glm::vec2> UVs;
    	for ( unsigned int i=0 ; i<length ; i++ ){
 		
-		glm::vec2 vertex_up_left    = glm::vec2( x+i*size/3     , y+size );
-		glm::vec2 vertex_up_right   = glm::vec2( x+i*size/3+size, y+size );
-		glm::vec2 vertex_down_right = glm::vec2( x+i*size/3+size, y      );
-		glm::vec2 vertex_down_left  = glm::vec2( x+i*size/3     , y      );
+		glm::vec2 vertex_up_left    = glm::vec2( x+i*(size/2-size/6)    , y+size );
+		glm::vec2 vertex_up_right   = glm::vec2( x+i*(size/2-size/6)+size, y+size );
+		glm::vec2 vertex_down_right = glm::vec2( x+i*(size/2-size/6)+size, y      );
+		glm::vec2 vertex_down_left  = glm::vec2( x+i*(size/2-size/6)     , y      );
 
 		vertices.push_back(vertex_up_left   );
 		vertices.push_back(vertex_down_left );
@@ -178,7 +178,7 @@ void cHud::initGL() {
 
 void cHud::loadAssets() {
 	text_tex = loadTex(TEX_TEXT_PATH);
-	back_tex = loadTex(TEX_DEATH_5_PATH);
+	back_tex = loadTex(TEX_HUD_PATH);
 }
 
 float cHud::getTimerOrigin() {

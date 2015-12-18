@@ -84,8 +84,9 @@
 #define TEX_WHITE_BACK_PATH		"assets/menus/semi-white.png"
 #define TEX_WIN_PATH			"assets/menus/you_win.png"
 #define	TEX_TEXT_PATH			"assets/textures/font.png"
+#define	TEX_HUD_PATH			"assets/menus/hud1.png"
 
-#define N_MODELS			28
+#define N_MODELS			29
 #define MODEL_CHAR1			0
 #define MODEL_CHAR2			1
 #define MODEL_CHAR3			2
@@ -114,6 +115,7 @@
 #define MODEL_STOP_SIGN		25
 #define MODEL_COIN			26
 #define MODEL_CLOCK			27
+#define MODEL_PYR 			28
 #define MODEL_CHAR1_PATH 			"assets/models/rex1.obj"
 #define MODEL_CHAR2_PATH 			"assets/models/rex2.obj"
 #define MODEL_CHAR3_PATH 			"assets/models/rex3.obj"
@@ -142,6 +144,7 @@
 #define MODEL_STOP_BODY_PATH		"assets/models/Stop_body.obj"
 #define MODEL_COIN_PATH				"assets/models/coin.obj"
 #define MODEL_CLOCK_PATH			"assets/models/clock.obj"
+#define MODEL_PYR_PATH				"assets/models/pyramid.obj"
 
 // Sounds array size
 #define NUM_SOUNDS			7

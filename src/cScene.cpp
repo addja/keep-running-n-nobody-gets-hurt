@@ -309,8 +309,11 @@ void cScene::drawTile(int j, int k) {
 			break;
 		case 21: // Evil stick
 			if (map_cds[j][k] > 0) {
-				if ((rot > PI/2 && rot < PI) || (rot > PI + PI/2 && rot < 2*PI)) drawColumn(j, k, 2, data->getTextureID(TEX_METAL));
-				drawColumn(j, k, 0, data->getTextureID(TEX_METAL));
+				if ((rot > PI/2 && rot < PI) || (rot > PI + PI/2 && rot < 2*PI)) {
+					drawColumn(j, k, 0, data->getTextureID(TEX_METAL));
+					data->drawModel(MODEL_PYR, data->getTextureID(TEX_METAL), position + glm::vec3(TILE_SIZE*j, new_y+1.5,-k*TILE_SIZE), rotation, scale, angle);
+				}
+				data->drawModel(MODEL_PYR, data->getTextureID(TEX_METAL), position + glm::vec3(TILE_SIZE*j, new_y+0.5,-k*TILE_SIZE), rotation, scale, angle);
 			}
 			break;
 		case 22: // Swap soil

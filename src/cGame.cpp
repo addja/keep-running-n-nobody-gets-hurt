@@ -113,7 +113,7 @@ void cGame::update(float dt) {
 			return;
 		}
 
-		if (scene.rot >= PI + PI/2 && current_level == MAX_LEVEL) data.playSound(SOUND_LAUGH);
+		if (scene.rot >= PI + PI/2 && current_level == MAX_LEVEL && state == STATE_RUNNING) data.playSound(SOUND_LAUGH);
 
 		data.cameraP = player.getPosition();
 	
@@ -149,13 +149,13 @@ void cGame::render() {
 		case STATE_DEATH:
 			scene.render();
 			player.render();
-			//hud.render();
+			hud.render();
 			menu.render();
 			break;
 		case STATE_NEXT_LEVEL:
 			scene.render();
 			player.render();
-			//hud.render();
+			hud.render();
 			menu.render();
 			break;
 		case STATE_WIN:
@@ -165,7 +165,7 @@ void cGame::render() {
 		case STATE_SWAP:
 			scene.render();
 			player.render();
-			//hud.render();
+			hud.render();
 			break;
 		case STATE_RUNNING:
 			// Draw scene
@@ -175,7 +175,7 @@ void cGame::render() {
 			player.render();
 
 			// Draw hud
-			//hud.render();	
+			hud.render();	
 		default:
 			break;
 	}
@@ -412,6 +412,7 @@ void cGame::loadAssets() {
 	data.loadModel(MODEL_STOP_BODY,MODEL_STOP_BODY_PATH);
 	data.loadModel(MODEL_COIN,MODEL_COIN_PATH);
 	data.loadModel(MODEL_CLOCK,MODEL_CLOCK_PATH);
+	data.loadModel(MODEL_PYR,MODEL_PYR_PATH);
 
 	// Textures for menu
 	menu.loadAssets();
