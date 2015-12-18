@@ -52,16 +52,15 @@ GLuint loadDDSTex(const char * imagepath){
 	}
    
 	/* verify the type of file */ 
-	// char filecode[4]; 
-	// fread(filecode, 1, 4, fp); 
-	// if (strncmp(filecode, "DDS ", 4) != 0) { 
-	// 	fclose(fp); 
-	// 	return 0; 
-	// }
+	char filecode[4]; 
+	fread(filecode, 1, 4, fp); 
+	if (strncmp(filecode, "DDS ", 4) != 0) { 
+		fclose(fp); 
+		return 0; 
+	}
 	
 	/* get the surface desc */ 
-	int matches = fread(&header, 124, 1, fp); 
-	if (matches == 0) std::cout << "Problem reading" << std::endl;
+	fread(&header, 124, 1, fp); 
 
 	unsigned int height      = *(unsigned int*)&(header[8 ]);
 	unsigned int width	     = *(unsigned int*)&(header[12]);
@@ -75,12 +74,11 @@ GLuint loadDDSTex(const char * imagepath){
 	/* how big is it going to be including all mipmaps? */ 
 	bufsize = mipMapCount > 1 ? linearSize * 2 : linearSize; 
 	buffer = (unsigned char*)malloc(bufsize * sizeof(unsigned char)); 
-	matches = fread(buffer, 1, bufsize, fp);
-	if (matches == 0) std::cout << "Problem reading" << std::endl; 
+	fread(buffer, 1, bufsize, fp); 
 	/* close the file pointer */ 
 	fclose(fp);
 
-	//unsigned int components  = (fourCC == FOURCC_DXT1) ? 3 : 4; 
+	unsigned int components  = (fourCC == FOURCC_DXT1) ? 3 : 4; 
 	unsigned int format;
 	switch(fourCC) 
 	{ 
@@ -129,4 +127,6 @@ GLuint loadDDSTex(const char * imagepath){
 	free(buffer); 
 
 	return textureID;
+
+
 }

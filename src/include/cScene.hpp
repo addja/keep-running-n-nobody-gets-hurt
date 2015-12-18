@@ -4,17 +4,20 @@
 #include "cEntity.hpp"
 
 #define OBJECT_ROTATION 0.9
-#define CD_REDUCTION 0.15
+#define CD_REDUCTION 0.22
 
 class cScene : cEntity {
 
 	public:
+		float rot;
+
 		cScene();
 		cScene(glm::vec3 p, glm::vec3 r, glm::vec3 s, float a, cData * d);
 		~cScene();
 
 		void loadLevel(int id);
 		void loadLevelCooldowns(int id);
+		void loadLevelObjects(int id);
 		void update(float dt);
 		void render();
 
@@ -39,6 +42,7 @@ class cScene : cEntity {
 		bool dead();
 		bool win();
 		bool slowed();
+		bool hit();
 
 	private:
 		std::vector< std::vector<int> > map;
@@ -46,5 +50,4 @@ class cScene : cEntity {
 		std::vector< std::vector<int> > objmap;
 		int map_width, map_height;
 		float playerx, playerz;
-		float rot;
 };

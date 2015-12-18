@@ -13,6 +13,7 @@ class cData {
 		int front;
 		float rotating_angle;
 		bool blur;
+		float timer;
 
 		cData();
 		~cData();
@@ -25,6 +26,7 @@ class cData {
 		bool loadMusic(int music, const std::string filename);
 
 		void playSound(int sound);
+		void stopSound(int sound);
 		void playMusic(int music);
 		void stopMusic(int music);
 

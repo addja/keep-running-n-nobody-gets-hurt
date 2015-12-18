@@ -9,6 +9,7 @@ public:
 
 	bool load(const std::string filename);
 	void play();
+	void stop();
 
 private:
 	sf::SoundBuffer buffer;

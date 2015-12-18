@@ -79,6 +79,7 @@ int main() {
 					break;
 				case sf::Event::KeyPressed:
 					switch (event.key.code) {
+						case sf::Keyboard::Num0: c = '0'; break;
 						case sf::Keyboard::Num1: c = '1'; break;
 						case sf::Keyboard::Num2: c = '2'; break;
 						case sf::Keyboard::Num3: c = '3'; break;

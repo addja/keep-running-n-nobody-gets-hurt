@@ -12,6 +12,10 @@ bool cSound::load(const std::string filename) {
 }
 
 void cSound::play() {
-	sound.play();
+	if (sound.getStatus() != sf::SoundSource::Playing) sound.play();
+}
+
+void cSound::stop() {
+	if (sound.getStatus() != sf::SoundSource::Stopped) sound.stop();
 }
 

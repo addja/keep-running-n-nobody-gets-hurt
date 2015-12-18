@@ -6,6 +6,7 @@ cData::cData() {
 	cameraP = glm::vec3(0,0,0);
 	front = 1;
 	rotating_angle = PI/4;
+	timer = 0;
 }
 
 cData::~cData() {}
@@ -34,6 +35,10 @@ bool cData::loadMusic(int m, const std::string filename) {
 
 void cData::playSound(int s) {
 	sound[s].play();
+}
+
+void cData::stopSound(int s) {
+	sound[s].stop();
 }
 
 void cData::playMusic(int m) {

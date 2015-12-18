@@ -5,6 +5,7 @@
 #include "cPlayer.hpp"
 #include "cScene.hpp"
 #include "cMenu.hpp"
+#include "cHud.hpp"
 
 #define STATE_LOADING		0
 #define STATE_RUNNING		1
@@ -40,8 +41,9 @@ class cGame {
 		cScene scene;
 		cPlayer player;
 		cMenu menu;
+		cHud hud;
+		
 		int state;
 		int current_level;
-		int coins;
 		bool clck;
 };

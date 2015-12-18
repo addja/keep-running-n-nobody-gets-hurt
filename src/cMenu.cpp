@@ -180,10 +180,10 @@ void cMenu::initGL() {
 	glBufferData(GL_ARRAY_BUFFER, sizeof(vertices) , vertices, GL_STATIC_DRAW);
 
 	GLfloat vertices2[] = {
-		0.65,0.42,-0.5,
-		0.65,-0.42,-0.5,
-		-0.65,-0.42,-0.5,
-		-0.65,0.42,-0.5
+		0.65,0.5,-0.5,
+		0.65,-0.5,-0.5,
+		-0.65,-0.5,-0.5,
+		-0.65,0.5,-0.5
 	};
 
 	glGenBuffers(1, &semi_window_vertexbuffer);                                                                                                         

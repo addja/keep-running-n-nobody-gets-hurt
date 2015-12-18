@@ -4,7 +4,7 @@ CFLAGS=-Wall -O3
 SFMLFLAGS=-lsfml-graphics -lsfml-audio -lsfml-window -lsfml-system
 LDFLAGS=-lGL -lGLEW
 
-OBJ =cSound.o cMusic.o cMenu.o cGraphics.o cTexture.o cData.o cModel.o cEntity.o cPlayer.o cScene.o main.o cGame.o 
+OBJ =cHud.o cSound.o cMusic.o cMenu.o cGraphics.o cTexture.o cData.o cModel.o cEntity.o cPlayer.o cScene.o main.o cGame.o 
 
 all: main
 
@@ -46,6 +46,9 @@ cSound.o: src/cSound.cpp
 
 cMusic.o: src/cMusic.cpp
 		$(CC) $(CFLAGS) -c src/cMusic.cpp	
+
+cHud.o: src/cHud.cpp
+		$(CC) $(CFLAGS) -c src/cHud.cpp	
 
 .PHONY: clean
 
